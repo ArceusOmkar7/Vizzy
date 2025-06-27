@@ -172,3 +172,42 @@ def get_column_summary(df: pd.DataFrame) -> pd.DataFrame:
         summary_data.append(col_data)
 
     return pd.DataFrame(summary_data)
+
+
+def get_numeric_columns(df: pd.DataFrame) -> List[str]:
+    """
+    Get list of numeric columns from dataframe.
+
+    Args:
+        df (pd.DataFrame): Input dataframe
+
+    Returns:
+        List[str]: List of numeric column names
+    """
+    return df.select_dtypes(include=[np.number]).columns.tolist()
+
+
+def get_categorical_columns(df: pd.DataFrame) -> List[str]:
+    """
+    Get list of categorical columns from dataframe.
+
+    Args:
+        df (pd.DataFrame): Input dataframe
+
+    Returns:
+        List[str]: List of categorical column names
+    """
+    return df.select_dtypes(include=['object', 'category']).columns.tolist()
+
+
+def get_datetime_columns(df: pd.DataFrame) -> List[str]:
+    """
+    Get list of datetime columns from dataframe.
+
+    Args:
+        df (pd.DataFrame): Input dataframe
+
+    Returns:
+        List[str]: List of datetime column names
+    """
+    return df.select_dtypes(include=['datetime64']).columns.tolist()

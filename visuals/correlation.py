@@ -351,3 +351,50 @@ def plot_correlation_network(df: pd.DataFrame, method: str = 'pearson',
               loc='upper right', bbox_to_anchor=(1, 1))
 
     return apply_chart_theme(fig)
+
+
+def find_strong_correlations(df: pd.DataFrame, threshold: float = 0.7,
+                             method: str = 'pearson') -> pd.DataFrame:
+    """
+    Find strong correlations above a threshold.
+
+    Args:
+        df (pd.DataFrame): Input dataframe with numeric columns
+        threshold (float): Minimum correlation threshold
+        method (str): Correlation method
+
+    Returns:
+        pd.DataFrame: DataFrame with strong correlation pairs
+    """
+    # Get numeric columns only
+    numeric_df = df.select_dtypes(include=[np.number])
+
+    if numeric_df.shape[1] < 2:
+        return pd.DataFrame(columns=['Variable 1', 'Variable 2', 'Correlation'])
+
+    # Calculate correlation matrix
+    corr_matrix = numeric_df.corr(method=method)
+
+    # Create mask for upper triangle (to avoid duplicates)
+    mask = np.triu(np.ones_like(corr_matrix, dtype=bool))
+    corr_matrix_masked = corr_matrix.mask(mask)
+
+    # Find strong correlations
+    strong_corrs = []
+
+    for i in range(len(corr_matrix_masked.columns)):
+        for j in range(len(corr_matrix_masked.columns)):
+            corr_val = corr_matrix_masked.iloc[i, j]
+            if not pd.isna(corr_val) and abs(corr_val) >= threshold:
+                strong_corrs.append({
+                    'Variable 1': corr_matrix_masked.columns[i],
+                    'Variable 2': corr_matrix_masked.columns[j],
+                    'Correlation': corr_val
+                })
+
+    result_df = pd.DataFrame(strong_corrs)
+    if not result_df.empty:
+        result_df = result_df.sort_values(
+            'Correlation', key=abs, ascending=False)
+
+    return result_df

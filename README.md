@@ -5,13 +5,13 @@ A **developer-friendly**, **Streamlit-powered** data visualization assistant tha
 ## 🎯 Features
 
 - **📁 Easy File Upload**: Support for CSV and Excel files
-- **🔍 Missing Values Analysis**: Interactive heatmaps and bar charts
-- **📊 Data Overview**: Data types, uniqueness, and memory usage analysis
-- **📈 Distribution Analysis**: Histograms, box plots, and statistical summaries
-- **🔗 Correlation Analysis**: Heatmaps, strength distribution, and network views
-- **📂 Categorical Analysis**: Value counts, diversity metrics, and relationships
-- **⚙️ Advanced Options**: Outlier detection, data sampling, and customization
-- **📱 Responsive Design**: Clean, modern UI that works on any screen size
+- **� Data Overview**: Clean data preview, types, and basic statistics
+- **❓ Missing Values Analysis**: Interactive heatmaps and detailed null analysis
+- **� Distribution Analysis**: Histograms and box plots for numeric data
+- **🔗 Correlation Analysis**: Correlation heatmaps with strength insights
+- **📂 Categorical Analysis**: Value counts and category distribution analysis
+- **🎨 Modern Interface**: Clean, tab-based UI focused on essential insights
+- **📱 Responsive Design**: Works seamlessly on any screen size
 
 ## 🚀 Quick Start
 
@@ -50,9 +50,14 @@ A **developer-friendly**, **Streamlit-powered** data visualization assistant tha
 ## 📖 Usage
 
 1. **Upload your data**: Use the sidebar to upload a CSV or Excel file
-2. **Select visualizations**: Choose which analyses you want to see
-3. **Explore insights**: Interact with the generated charts and tables
-4. **Export results**: Download summary tables or save charts
+2. **Explore with tabs**: Navigate through different analysis tabs:
+   - **📋 Data Overview**: View data preview, types, and basic metrics
+   - **❓ Missing Values**: Analyze null patterns with heatmaps and charts
+   - **📊 Distributions**: Explore numeric data distributions
+   - **🔗 Correlations**: Discover relationships between numeric variables
+   - **📂 Categories**: Analyze categorical data and value frequencies
+3. **Interactive analysis**: Each tab provides focused, relevant insights
+4. **Export insights**: View summary tables and save analysis results
 
 ### Supported File Formats
 
@@ -63,7 +68,7 @@ A **developer-friendly**, **Streamlit-powered** data visualization assistant tha
 
 ```
 data_visualizer/
-├── app.py                    # Main Streamlit application
+├── app.py                    # Main Streamlit application with tab interface
 ├── style.py                  # Global styling and themes
 ├── requirements.txt          # Python dependencies
 ├── pyproject.toml           # UV/pip project configuration
@@ -71,7 +76,7 @@ data_visualizer/
 │   └── config.toml
 ├── utils/                   # Pure Python utilities
 │   ├── __init__.py
-│   ├── data_checks.py       # Data quality analysis
+│   ├── data_checks.py       # Data quality analysis functions
 │   └── file_loader.py       # File loading and caching
 ├── visuals/                 # Visualization functions
 │   ├── __init__.py
@@ -80,10 +85,18 @@ data_visualizer/
 │   ├── distributions.py     # Distribution analysis
 │   ├── correlation.py       # Correlation analysis
 │   └── categories.py        # Categorical data analysis
-└── components/              # Reusable UI components
-    ├── __init__.py
-    ├── sidebar.py           # Sidebar interface
-    └── charts.py            # Chart rendering wrapper
+├── components/              # Tab-based UI components
+│   ├── __init__.py
+│   ├── data_overview.py     # Data overview tab
+│   ├── missing_values.py    # Missing values analysis tab
+│   ├── distributions.py     # Distribution analysis tab
+│   ├── correlations.py      # Correlation analysis tab
+│   └── categorical.py       # Categorical analysis tab
+└── sample_data/             # Sample datasets for testing
+    ├── sales_data.csv
+    ├── student_performance.csv
+    ├── messy_data.csv
+    └── high_cardinality_data.csv
 ```
 
 ## 🎨 Customization
