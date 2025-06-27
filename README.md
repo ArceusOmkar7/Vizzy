@@ -109,42 +109,49 @@ The app uses a consistent color scheme defined in `style.py`. You can customize:
 - **Chart styles**: Update `setup_plot_style()` for different themes
 - **Streamlit theme**: Edit `.streamlit/config.toml`
 
-### Adding New Visualizations
+### Adding New Tab Components
 
-1. Create your visualization function in the appropriate `visuals/*.py` module
-2. Add the option to `components/sidebar.py`
-3. Wire it up in `components/charts.py`
+1. Create a new tab component in `components/` (e.g., `new_analysis.py`)
+2. Add the visualization functions to the appropriate `visuals/*.py` module
+3. Import and add the tab to `app.py` in the main tab interface
+4. Follow the focused, single-purpose design pattern
 
-## 📊 Visualization Types
+## 📊 Analysis Types (Streamlined & Focused)
 
-### Missing Values Analysis
-- **Bar Chart**: Shows count of missing values per column
-- **Heatmap**: Reveals patterns in missing data
-- **Correlation**: Analyzes relationships between missing value patterns
+### Data Overview Tab 📋
+- **Data Preview**: First N rows with customizable display count
+- **Basic Metrics**: Rows, columns, memory usage, missing values count
+- **Data Type Summary**: Visual breakdown of column types
+- **Column Summary**: Detailed statistics for each column
 
-### Distribution Analysis
-- **Histograms**: Shows data distribution with KDE overlay
-- **Box Plots**: Reveals outliers and quartiles
-- **Q-Q Plots**: Tests for normality
+### Missing Values Analysis Tab ❓
+- **Missing Values Heatmap**: Visual pattern detection for null values
+- **Missing Values Bar Chart**: Count and percentage of nulls per column
+- **Null Pattern Analysis**: Insights about missing data distribution
 
-### Correlation Analysis
-- **Heatmap**: Classic correlation matrix
-- **Strength Distribution**: Histogram of correlation values
-- **Top Correlations**: Ranked list of strongest relationships
-- **Network View**: Graph-based correlation visualization
+### Distribution Analysis Tab 📊
+- **Histograms**: Data distribution visualization for numeric columns
+- **Box Plots**: Quartile analysis and outlier detection
+- **Statistical Summary**: Key statistics (mean, std, quartiles) for each column
 
-### Categorical Analysis
-- **Value Counts**: Bar charts for category frequencies
-- **Pie Charts**: Proportion visualization
-- **Diversity Metrics**: Shannon entropy, Gini impurity, Simpson index
-- **Relationship Analysis**: Cross-tabulation heatmaps
+### Correlation Analysis Tab 🔗
+- **Correlation Heatmap**: Clean matrix visualization with customizable methods
+- **Strong Correlations Table**: Ranked relationships above threshold
+- **Quick Insights**: Strongest correlation and average correlation metrics
 
-## ⚡ Performance Tips
+### Categorical Analysis Tab 📂
+- **Value Counts**: Top-K categories with frequency counts
+- **Category Analysis**: Detailed breakdown per categorical column
+- **Data Quality Insights**: Cardinality and balance analysis
 
-- **Enable sampling** for datasets with >10,000 rows
-- **Limit categorical analysis** to columns with reasonable cardinality
-- **Use correlation thresholds** to focus on meaningful relationships
-- **Check memory usage** for very wide datasets
+
+## ⚡ Performance & Simplicity
+
+The new tab-based interface automatically handles performance optimization:
+- **Automatic sampling** for large datasets (>10,000 rows)
+- **Smart column limits** for categorical analysis (max 4 columns)
+- **Optimized visualizations** with essential insights only
+- **Streamlined workflow** reduces cognitive load and decision fatigue
 
 ## 🛠️ Development
 
@@ -153,14 +160,6 @@ The app uses a consistent color scheme defined in `style.py`. You can customize:
 ```bash
 streamlit run app.py --logger.level=debug
 ```
-
-### Code Style
-
-- **Functions**: `snake_case`
-- **Classes**: `CamelCase` (if any)
-- **Constants**: `UPPER_CASE`
-- **Docstrings**: Required for all functions
-- **Type hints**: Encouraged for function parameters
 
 ### Adding Dependencies
 
@@ -185,32 +184,8 @@ pip install package_name
 - [ ] **Custom Color Palettes**: User-selectable themes
 - [ ] **Data Preprocessing Suggestions**: Automated recommendations
 
-## 🤝 Contributing
-
-1. Fork the repository
-2. Create a feature branch: `git checkout -b feature-name`
-3. Make your changes and add tests
-4. Commit your changes: `git commit -am 'Add feature'`
-5. Push to the branch: `git push origin feature-name`
-6. Submit a pull request
-
-## 📄 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
 ## 🙋‍♀️ Support
 
 - **Issues**: Report bugs or request features via GitHub Issues
 - **Discussions**: Ask questions in GitHub Discussions
 - **Documentation**: Check the `/docs` folder (coming soon)
-
-## 🙏 Acknowledgments
-
-- **Streamlit**: For the amazing web app framework
-- **Seaborn/Matplotlib**: For beautiful statistical visualizations
-- **Pandas**: For powerful data manipulation capabilities
-- **The Python Community**: For the incredible ecosystem
-
----
-
-**Made with ❤️ for data scientists, analysts, and developers who love clean, insightful visualizations.**
