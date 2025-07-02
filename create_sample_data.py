@@ -134,12 +134,67 @@ def create_sample_datasets():
     high_card_data.to_csv(f"{data_dir}/high_cardinality_data.csv", index=False)
     print(f"✓ Created high_cardinality_data.csv ({len(high_card_data)} rows)")
 
+    # Dataset 5: Time series data for testing time series analysis
+    np.random.seed(42)
+
+    # Create 2 years of daily data
+    date_range = pd.date_range(start='2022-01-01', end='2023-12-31', freq='D')
+    n_ts_points = len(date_range)
+
+    # Generate realistic time series with trend, seasonality, and noise
+    # Base trend (slightly increasing)
+    trend = np.linspace(100, 120, n_ts_points)
+
+    # Seasonal patterns (yearly and weekly)
+    yearly_season = 10 * np.sin(2 * np.pi * np.arange(n_ts_points) / 365.25)
+    weekly_season = 5 * np.sin(2 * np.pi * np.arange(n_ts_points) / 7)
+
+    # Random noise
+    noise = np.random.normal(0, 3, n_ts_points)
+
+    # Combine components
+    values = trend + yearly_season + weekly_season + noise
+
+    # Add some outliers
+    outlier_indices = np.random.choice(n_ts_points, size=10, replace=False)
+    values[outlier_indices] += np.random.choice(
+        [-1, 1], size=10) * np.random.uniform(20, 40, size=10)
+
+    # Create additional time series with different patterns
+    ts_data = pd.DataFrame({
+        'date': date_range,
+        'website_visits': np.maximum(values, 0).round().astype(int),
+        'revenue': (values * 12.5 + np.random.normal(0, 50, n_ts_points)).round(2),
+        'temperature': 20 + 15 * np.sin(2 * np.pi * np.arange(n_ts_points) / 365.25) + np.random.normal(0, 2, n_ts_points),
+        'sales_volume': np.maximum(values * 0.8 + np.random.normal(0, 5, n_ts_points), 0).round().astype(int),
+        'customer_count': np.maximum((values * 0.6 + np.random.normal(0, 3, n_ts_points)).round().astype(int), 0),
+        'day_of_week': date_range.day_name(),
+        'month': date_range.month,
+        'quarter': date_range.quarter,
+        'is_holiday': np.random.choice([0, 1], n_ts_points, p=[0.95, 0.05])
+    })
+
+    # Add some missing values randomly
+    missing_indices = np.random.choice(
+        n_ts_points, size=int(0.02 * n_ts_points), replace=False)
+    ts_data.loc[missing_indices[:10], 'revenue'] = np.nan
+    ts_data.loc[missing_indices[10:15], 'temperature'] = np.nan
+
+    # Add weekend effect to some metrics
+    weekend_mask = ts_data['date'].dt.weekday >= 5
+    ts_data.loc[weekend_mask, 'website_visits'] *= 0.7
+    ts_data.loc[weekend_mask, 'customer_count'] *= 0.8
+
+    ts_data.to_csv(f"{data_dir}/time_series_data.csv", index=False)
+    print(f"✓ Created time_series_data.csv ({len(ts_data)} rows)")
+
     print(f"\n🎉 Sample datasets created in '{data_dir}/' directory!")
     print("\nDataset descriptions:")
     print("1. sales_data.csv - E-commerce sales with mixed data types and missing values")
     print("2. student_performance.csv - Academic performance with correlated scores")
     print("3. messy_data.csv - Small dataset with high missing value percentage")
     print("4. high_cardinality_data.csv - Transaction data with many unique values")
+    print("5. time_series_data.csv - Multi-variate time series with trends and seasonality")
     print("\nTo test the app:")
     print("1. Run: streamlit run app.py")
     print("2. Upload any of these CSV files")

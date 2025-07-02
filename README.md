@@ -10,6 +10,7 @@ A **developer-friendly**, **Streamlit-powered** data visualization assistant tha
 - **📊 Distribution Analysis**: Histograms and box plots for numeric data
 - **🔗 Correlation Analysis**: Correlation heatmaps with strength insights
 - **📂 Categorical Analysis**: Value counts and category distribution analysis
+- **📈 Time Series Analysis**: Trend analysis, seasonality detection, and temporal patterns
 - **🎨 Custom Color Palettes**: Choose from 12+ beautiful color schemes for all visualizations
 - **🎨 Modern Interface**: Clean, tab-based UI focused on essential insights
 - **📱 Responsive Design**: Works seamlessly on any screen size
@@ -72,6 +73,7 @@ python create_sample_data.py
    - **📊 Distributions**: Explore numeric data distributions
    - **🔗 Correlations**: Discover relationships between numeric variables
    - **📂 Categories**: Analyze categorical data and value frequencies
+   - **📈 Time Series**: Analyze temporal patterns, trends, and seasonality
 4. **Interactive analysis**: Each tab provides focused, relevant insights
 5. **Export insights**: View summary tables and save analysis results
 
@@ -100,19 +102,23 @@ data_visualizer/
 │   ├── summary.py           # Data overview charts
 │   ├── distributions.py     # Distribution analysis
 │   ├── correlation.py       # Correlation analysis
-│   └── categories.py        # Categorical data analysis
+│   ├── categories.py        # Categorical data analysis
+│   └── time_series.py       # Time series analysis and forecasting
 ├── components/              # Tab-based UI components
 │   ├── __init__.py
 │   ├── data_overview.py     # Data overview tab
 │   ├── missing_values.py    # Missing values analysis tab
 │   ├── distributions.py     # Distribution analysis tab
 │   ├── correlations.py      # Correlation analysis tab
-│   └── categorical.py       # Categorical analysis tab
+│   ├── categorical.py       # Categorical analysis tab
+│   ├── time_series.py       # Time series analysis tab
+│   └── color_settings.py    # Color palette configuration
 └── sample_data/             # Sample datasets for testing
     ├── sales_data.csv
     ├── student_performance.csv
     ├── messy_data.csv
-    └── high_cardinality_data.csv
+    ├── high_cardinality_data.csv
+    └── time_series_data.csv
 ```
 
 ## 🎨 Customization
@@ -165,6 +171,14 @@ The app uses a consistent color scheme defined in `style.py`. You can customize:
 - **Category Analysis**: Detailed breakdown per categorical column
 - **Data Quality Insights**: Cardinality and balance analysis
 
+### Time Series Analysis Tab 📈
+
+- **Time Series Overview**: Interactive line plots with trend analysis
+- **Temporal Patterns**: Analysis by month, day of week, hour, and year
+- **Rolling Statistics**: Moving averages and rolling standard deviation
+- **Seasonal Decomposition**: Advanced trend and seasonality breakdown (requires statsmodels)
+- **DateTime Detection**: Automatic identification and conversion of date columns
+
 ## ⚡ Performance & Simplicity
 
 The new tab-based interface automatically handles performance optimization:
@@ -206,8 +220,8 @@ pip install package_name
 ## 🔮 Future Enhancements
 
 - [x] **Custom Color Palettes**: User-selectable themes for all visualizations ✅
+- [x] **Time Series Analysis**: Comprehensive temporal analysis with trends and patterns ✅
 - [ ] **PDF Export**: Generate downloadable reports
-- [ ] **Time Series Analysis**: For datetime columns
 - [ ] **Machine Learning Insights**: Automated feature importance
 - [ ] **Data Quality Scoring**: Overall dataset health metrics
 - [ ] **Data Preprocessing Suggestions**: Automated recommendations

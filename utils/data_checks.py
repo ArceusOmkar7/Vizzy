@@ -211,3 +211,198 @@ def get_datetime_columns(df: pd.DataFrame) -> List[str]:
         List[str]: List of datetime column names
     """
     return df.select_dtypes(include=['datetime64']).columns.tolist()
+
+
+def detect_datetime_columns(df: pd.DataFrame) -> Dict[str, Any]:
+    """
+    Detect and analyze datetime columns in the dataframe.
+
+    Args:
+        df (pd.DataFrame): Input dataframe
+
+    Returns:
+        dict: Dictionary containing datetime column analysis
+    """
+    datetime_info = {}
+    potential_datetime_cols = []
+
+    for col in df.columns:
+        # Check if column is already datetime
+        if pd.api.types.is_datetime64_any_dtype(df[col]):
+            datetime_info[col] = {
+                'type': 'datetime',
+                'min_date': df[col].min(),
+                'max_date': df[col].max(),
+                'date_range_days': (df[col].max() - df[col].min()).days if pd.notna(df[col].min()) and pd.notna(df[col].max()) else None,
+                'null_count': df[col].isnull().sum(),
+                'frequency_hint': _infer_frequency(df[col].dropna())
+            }
+        else:
+            # Try to detect potential datetime columns
+            sample_data = df[col].dropna().head(100)
+            if len(sample_data) > 0:
+                datetime_score = _calculate_datetime_score(sample_data)
+                if datetime_score > 0.7:  # 70% confidence threshold
+                    potential_datetime_cols.append({
+                        'column': col,
+                        'score': datetime_score,
+                        'sample_values': sample_data.head(5).tolist()
+                    })
+
+    return {
+        'datetime_columns': datetime_info,
+        'potential_datetime_columns': potential_datetime_cols,
+        'has_time_series': len(datetime_info) > 0
+    }
+
+
+def _calculate_datetime_score(series: pd.Series) -> float:
+    """
+    Calculate the likelihood that a series contains datetime data.
+
+    Args:
+        series (pd.Series): Series to analyze
+
+    Returns:
+        float: Score between 0 and 1 indicating datetime likelihood
+    """
+    if len(series) == 0:
+        return 0.0
+
+    score = 0.0
+    total_checks = 0
+
+    # Check if values can be parsed as dates
+    parseable_count = 0
+    for value in series.head(20):  # Sample first 20 values
+        try:
+            pd.to_datetime(str(value))
+            parseable_count += 1
+        except:
+            pass
+        total_checks += 1
+
+    if total_checks > 0:
+        score += (parseable_count / total_checks) * 0.6
+
+    # Check for common date patterns
+    str_series = series.astype(str)
+    pattern_score = 0
+
+    # Date patterns to check
+    patterns = [
+        r'\d{4}-\d{2}-\d{2}',  # YYYY-MM-DD
+        r'\d{2}/\d{2}/\d{4}',  # MM/DD/YYYY
+        r'\d{2}-\d{2}-\d{4}',  # MM-DD-YYYY
+        r'\d{4}/\d{2}/\d{2}',  # YYYY/MM/DD
+    ]
+
+    for pattern in patterns:
+        matches = str_series.str.contains(pattern, na=False).sum()
+        pattern_score = max(pattern_score, matches / len(series))
+
+    score += pattern_score * 0.4
+
+    return min(score, 1.0)
+
+
+def _infer_frequency(datetime_series: pd.Series) -> str:
+    """
+    Infer the frequency of a datetime series.
+
+    Args:
+        datetime_series (pd.Series): Datetime series
+
+    Returns:
+        str: Inferred frequency or 'irregular'
+    """
+    if len(datetime_series) < 2:
+        return 'insufficient_data'
+
+    try:
+        # Sort the series
+        sorted_series = datetime_series.sort_values()
+
+        # Calculate differences
+        diffs = sorted_series.diff().dropna()
+
+        if len(diffs) == 0:
+            return 'insufficient_data'
+
+        # Get the most common difference
+        mode_diff = diffs.mode()
+
+        if len(mode_diff) == 0:
+            return 'irregular'
+
+        mode_diff = mode_diff.iloc[0]
+
+        # Check if most differences match the mode (within tolerance)
+        tolerance = pd.Timedelta(hours=1)  # 1 hour tolerance
+        consistent_count = ((diffs - mode_diff).abs() <= tolerance).sum()
+        consistency_ratio = consistent_count / len(diffs)
+
+        if consistency_ratio < 0.8:  # Less than 80% consistent
+            return 'irregular'
+
+        # Determine frequency based on mode difference
+        days = mode_diff.total_seconds() / (24 * 3600)
+
+        if abs(days - 1) < 0.1:
+            return 'daily'
+        elif abs(days - 7) < 0.5:
+            return 'weekly'
+        elif abs(days - 30.44) < 2:  # Average month length
+            return 'monthly'
+        elif abs(days - 365.25) < 30:  # Year with leap year consideration
+            return 'yearly'
+        elif mode_diff.total_seconds() < 3600:  # Less than 1 hour
+            return 'intraday'
+        else:
+            return f'every_{int(days)}_days'
+
+    except Exception:
+        return 'irregular'
+
+
+def prepare_time_series_data(df: pd.DataFrame, datetime_col: str, value_cols: List[str] = None) -> pd.DataFrame:
+    """
+    Prepare data for time series analysis.
+
+    Args:
+        df (pd.DataFrame): Input dataframe
+        datetime_col (str): Name of the datetime column
+        value_cols (List[str], optional): List of value columns to include
+
+    Returns:
+        pd.DataFrame: Prepared time series dataframe
+    """
+    # Create a copy to avoid modifying original
+    ts_df = df.copy()
+
+    # Convert datetime column if needed
+    if not pd.api.types.is_datetime64_any_dtype(ts_df[datetime_col]):
+        ts_df[datetime_col] = pd.to_datetime(
+            ts_df[datetime_col], errors='coerce')
+
+    # Remove rows where datetime conversion failed
+    ts_df = ts_df.dropna(subset=[datetime_col])
+
+    # Sort by datetime
+    ts_df = ts_df.sort_values(datetime_col)
+
+    # Set datetime as index
+    ts_df = ts_df.set_index(datetime_col)
+
+    # Select value columns if specified
+    if value_cols:
+        # Filter to only include numeric columns that exist
+        valid_cols = [col for col in value_cols if col in ts_df.columns
+                      and pd.api.types.is_numeric_dtype(ts_df[col])]
+        if valid_cols:
+            ts_df = ts_df[valid_cols]
+    else:
+        # Select all numeric columns
+        ts_df = ts_df.select_dtypes(include=[np.number])
+
+    return ts_df

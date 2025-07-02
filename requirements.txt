@@ -8,9 +8,11 @@ matplotlib>=3.10.3
 seaborn>=0.13.2
 scikit-learn>=1.7.0
 scipy>=1.11.0
+plotly>=6.2.0
 
 # Optional dependencies for enhanced functionality
 openpyxl>=3.1.0  # For Excel file support
 xlrd>=2.0.0      # For older Excel files
+statsmodels>=0.14.4  # For advanced time series analysis (seasonal decomposition)
 # reportlab>=4.0.0  # For PDF generation (future enhancement)
 # weasyprint>=61.0  # Alternative PDF generation (future enhancement)
