@@ -1,5 +1,5 @@
 """
-Demo script to generate sample data for testing the Data Visualizer app.
+Demo script to generate sample data for testing the Vizzy app.
 
 This script creates various types of datasets to test different visualization features.
 """
@@ -12,7 +12,7 @@ import os
 
 def create_sample_datasets():
     """
-    Create sample datasets for testing the Data Visualizer app.
+    Create sample datasets for testing the Vizzy app.
     """
     # Create data directory if it doesn't exist
     data_dir = "sample_data"

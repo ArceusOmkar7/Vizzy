@@ -1,5 +1,5 @@
 """
-Global styling configuration for the Data Visualizer app.
+Global styling configuration for the Vizzy app.
 
 Defines consistent themes for Streamlit UI and Matplotlib/Seaborn plots.
 Includes custom color palette selection functionality.

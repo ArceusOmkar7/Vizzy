@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """
-Setup and Installation Guide for Data Visualizer
+Setup and Installation Guide for Vizzy
 
-This script provides step-by-step guidance for setting up the Data Visualizer app.
+This script provides step-by-step guidance for setting up the Vizzy app.
 """
 
 import subprocess
@@ -15,7 +15,7 @@ import platform
 def print_header():
     """Print the application header."""
     print("=" * 60)
-    print("📊 DATA VISUALIZER - SETUP & INSTALLATION GUIDE")
+    print("📊 VIZZY - SETUP & INSTALLATION GUIDE")
     print("=" * 60)
     print()
 
@@ -152,7 +152,7 @@ def main():
     # Check if we're in the right directory
     if not Path("app.py").exists():
         print("❌ Error: app.py not found!")
-        print("   Please run this script from the Data Visualizer project directory.")
+        print("   Please run this script from the Vizzy project directory.")
         return
 
     # Check Python version

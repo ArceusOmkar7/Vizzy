@@ -1,5 +1,5 @@
 """
-Quick run script for the Data Visualizer app.
+Quick run script for the Vizzy app.
 
 This script handles dependency installation and runs the Streamlit app.
 """
@@ -49,8 +49,8 @@ def create_sample_data():
 
 
 def main():
-    """Main function to run the Data Visualizer app."""
-    print("🚀 Starting Data Visualizer...")
+    """Main function to run the Vizzy app."""
+    print("🚀 Starting Vizzy...")
 
     # Check if we're in the right directory
     if not Path("app.py").exists():
@@ -72,7 +72,7 @@ def main():
     create_sample_data()
 
     # Run the Streamlit app
-    print("\n🎉 Launching Data Visualizer...")
+    print("\n🎉 Launching Vizzy...")
     print("📱 The app will open in your default browser")
     print("🔗 If it doesn't open automatically, go to: http://localhost:8501")
     print("⏹️  Press Ctrl+C to stop the server")
@@ -85,7 +85,7 @@ def main():
             "--browser.gatherUsageStats", "false"
         ])
     except KeyboardInterrupt:
-        print("\n\n👋 Thanks for using Data Visualizer!")
+        print("\n\n👋 Thanks for using Vizzy!")
     except Exception as e:
         print(f"\n❌ Error running the app: {e}")
         print("Try running manually: streamlit run app.py")

@@ -1,7 +1,7 @@
 [project]
-name = "data-visualizer"
+name = "vizzy"
 version = "0.1.0"
-description = "Add your description here"
+description = "A developer-friendly, Streamlit-powered data visualization assistant"
 readme = "README.md"
 requires-python = ">=3.10"
 dependencies = [

@@ -1,5 +1,5 @@
 """
-Data Visualizer Streamlit App - Main Entry Point
+Vizzy Streamlit App - Main Entry Point
 
 A streamlined data visualization tool with tab-based interface for easy data exploration.
 Features separate tabs for data overview, missing values, distributions, correlations, and categorical analysis.
@@ -23,7 +23,7 @@ from components.color_settings import render_color_palette_settings, apply_palet
 
 def render_file_uploader():
     """Render the file upload section."""
-    st.sidebar.title("📊 Data Visualizer")
+    st.sidebar.title("📊 Vizzy")
     st.sidebar.markdown("---")
 
     # File uploader
@@ -73,7 +73,7 @@ def main():
     """Main application entry point."""
     # Configure page
     st.set_page_config(
-        page_title="Data Visualizer",
+        page_title="Vizzy",
         page_icon="📊",
         layout="wide",
         initial_sidebar_state="expanded"
@@ -83,7 +83,7 @@ def main():
     apply_global_style()
 
     # Main title
-    st.title("📊 Data Visualizer")
+    st.title("📊 Vizzy")
     st.markdown("Upload your CSV or Excel file to get instant data insights!")
 
     # File upload

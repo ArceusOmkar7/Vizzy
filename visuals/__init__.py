@@ -1,5 +1,5 @@
 """
-Data visualization components for the Data Visualizer app.
+Data visualization components for the Vizzy app.
 """
 
 # This makes visuals a proper Python package

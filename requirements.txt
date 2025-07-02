@@ -1,4 +1,4 @@
-# Data Visualizer Requirements
+# Vizzy Requirements
 # Generated from pyproject.toml for compatibility
 
 streamlit>=1.46.0

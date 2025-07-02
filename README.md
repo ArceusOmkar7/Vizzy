@@ -1,4 +1,4 @@
-# 📊 Data Visualizer
+# 📊 Vizzy
 
 A **developer-friendly**, **Streamlit-powered** data visualization assistant that lets you drop in any CSV or Excel file and instantly get comprehensive data insights.
 
@@ -28,7 +28,7 @@ A **developer-friendly**, **Streamlit-powered** data visualization assistant tha
 
    ```bash
    git clone <repository-url>
-   cd "Data Visualizer"
+   cd "Vizzy"
    ```
 
 2. **Install dependencies:**
@@ -85,7 +85,7 @@ python create_sample_data.py
 ## 🗂️ Project Structure
 
 ```
-data_visualizer/
+vizzy/
 ├── app.py                    # Main Streamlit application with tab interface
 ├── style.py                  # Global styling and themes
 ├── requirements.txt          # Python dependencies
