@@ -7,11 +7,16 @@ textColor = "#2c3e50"
 [server]
 headless = true
 port = 8501
-enableCORS = false
-enableXsrfProtection = true
+enableCORS = true
+enableXsrfProtection = false
+fileWatcherType = "poll"
+runOnSave = true
 
 [browser]
 gatherUsageStats = false
 
 [global]
 developmentMode = false
+
+[logger]
+level = "error"

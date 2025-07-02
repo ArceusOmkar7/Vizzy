@@ -7,6 +7,7 @@ A **developer-friendly**, **Streamlit-powered** data visualization assistant tha
 - **📁 Easy File Upload**: Support for CSV and Excel files
 - **📋 Data Overview**: Clean data preview, types, and basic statistics
 - **🎯 Data Quality Scoring**: Comprehensive dataset health assessment with actionable insights
+- **🛠️ Data Preprocessing Suggestions**: Intelligent recommendations with ready-to-use code snippets
 - **❓ Missing Values Analysis**: Interactive heatmaps and detailed null analysis
 - **📊 Distribution Analysis**: Histograms and box plots for numeric data
 - **🔗 Correlation Analysis**: Correlation heatmaps with strength insights
@@ -75,6 +76,7 @@ python create_sample_data.py
    - **🔗 Correlations**: Discover relationships between numeric variables
    - **📂 Categories**: Analyze categorical data and value frequencies
    - **📈 Time Series**: Analyze temporal patterns, trends, and seasonality
+   - **🛠️ Preprocessing**: Get intelligent recommendations for data cleaning and preparation
 4. **Interactive analysis**: Each tab provides focused, relevant insights
 5. **Export insights**: View summary tables and save analysis results
 
@@ -97,7 +99,8 @@ vizzy/
 │   ├── __init__.py
 │   ├── data_checks.py       # Data quality analysis functions
 │   ├── file_loader.py       # File loading and caching
-│   └── quality_engine.py    # Comprehensive data quality scoring engine
+│   ├── quality_engine.py    # Comprehensive data quality scoring engine
+│   └── preprocessing_suggestions.py # Intelligent preprocessing recommendations engine
 ├── visuals/                 # Visualization functions
 │   ├── __init__.py
 │   ├── nulls.py             # Missing values visualizations
@@ -106,7 +109,8 @@ vizzy/
 │   ├── correlation.py       # Correlation analysis
 │   ├── categories.py        # Categorical data analysis
 │   ├── time_series.py       # Time series analysis and forecasting
-│   └── quality_score.py     # Data quality visualization components
+│   ├── quality_score.py     # Data quality visualization components
+│   └── preprocessing.py     # Preprocessing suggestions visualizations
 ├── components/              # Tab-based UI components
 │   ├── __init__.py
 │   ├── data_overview.py     # Data overview tab
@@ -115,6 +119,7 @@ vizzy/
 │   ├── correlations.py      # Correlation analysis tab
 │   ├── categorical.py       # Categorical analysis tab
 │   ├── time_series.py       # Time series analysis tab
+│   ├── preprocessing.py     # Data preprocessing suggestions tab
 │   └── color_settings.py    # Color palette configuration
 └── sample_data/             # Sample datasets for testing
     ├── sales_data.csv
@@ -187,6 +192,19 @@ The app uses a consistent color scheme defined in `style.py`. You can customize:
 - **Seasonal Decomposition**: Advanced trend and seasonality breakdown (requires statsmodels)
 - **DateTime Detection**: Automatic identification and conversion of date columns
 
+### Data Preprocessing Tab 🛠️
+
+- **Intelligent Analysis**: 8 preprocessing categories with priority scoring
+- **Missing Values Strategy**: Column-specific recommendations with code snippets
+- **Outlier Treatment**: Statistical detection and treatment suggestions
+- **Feature Scaling**: Automatic scale analysis and scaler recommendations
+- **Categorical Encoding**: Smart encoding strategy selection based on cardinality
+- **Data Type Optimization**: Memory usage analysis and optimization suggestions
+- **Feature Engineering**: DateTime extraction, transformation, and binning recommendations
+- **Code Generation**: Ready-to-use Python scripts for all preprocessing steps
+- **Priority Dashboard**: Visual urgency assessment and category breakdown
+- **Export Options**: Download complete preprocessing scripts and reports
+
 ## 🎯 Data Quality Scoring
 
 Vizzy includes a comprehensive data quality assessment engine that automatically evaluates your dataset across multiple dimensions and provides actionable insights for improvement.
@@ -196,21 +214,25 @@ Vizzy includes a comprehensive data quality assessment engine that automatically
 The scoring system evaluates your data across **5 key dimensions**:
 
 1. **📋 Completeness (25% weight)**
+
    - Analyzes missing values across all columns
    - Provides weighted scoring based on missing data patterns
    - Identifies columns with critical missing data (>50%)
 
 2. **🔧 Consistency (20% weight)**
+
    - Detects mixed data types within columns
    - Identifies formatting issues (whitespace, case inconsistencies)
    - Validates data type appropriateness
 
 3. **🎯 Accuracy (25% weight)**
+
    - Statistical outlier detection using IQR method
    - Validates logical constraints (e.g., no negative ages)
    - Identifies suspicious patterns in categorical data
 
 4. **🔍 Uniqueness (15% weight)**
+
    - Duplicate row detection and quantification
    - ID column validation for uniqueness
    - Low uniqueness pattern identification
@@ -243,6 +265,87 @@ The scoring system evaluates your data across **5 key dimensions**:
 - **Heatmaps**: Column-level quality visualization (for datasets ≤20 columns)
 - **Expandable Reports**: Detailed quality breakdowns and recommendations
 - **Download Options**: Export quality reports for documentation
+
+## 🛠️ Data Preprocessing Suggestions
+
+Vizzy's intelligent preprocessing engine analyzes your dataset and provides actionable recommendations for data cleaning and preparation, complete with ready-to-use code snippets.
+
+### Preprocessing Categories
+
+The system evaluates your data across **8 key preprocessing areas**:
+
+1. **🔧 Missing Values Handling**
+
+   - Strategy recommendations based on missing percentage and data type
+   - Column-specific approaches (median, mode, forward fill, interpolation)
+   - Advanced imputation suggestions for complex cases
+
+2. **📊 Outlier Treatment**
+
+   - Statistical outlier detection using IQR method
+   - Treatment strategies: removal, capping, transformation
+   - Column-specific outlier analysis and recommendations
+
+3. **📏 Feature Scaling**
+
+   - Automatic detection of scale differences between columns
+   - StandardScaler vs MinMaxScaler recommendations
+   - Scaling necessity assessment based on data characteristics
+
+4. **🏷️ Categorical Encoding**
+
+   - Smart encoding strategy selection based on cardinality
+   - One-hot, label, frequency, and target encoding recommendations
+   - High cardinality handling with grouping strategies
+
+5. **💾 Data Type Optimization**
+
+   - Memory usage analysis and optimization suggestions
+   - Automatic downcasting recommendations for numeric types
+   - String to categorical conversion for memory efficiency
+
+6. **🔨 Feature Engineering**
+
+   - DateTime feature extraction (year, month, weekday, etc.)
+   - Skewed data transformation suggestions
+   - Polynomial features for small datasets
+   - Binning recommendations for high-cardinality features
+
+7. **🔍 Duplicate Handling**
+
+   - Duplicate detection and removal strategies
+   - Impact assessment and removal recommendations
+
+8. **✅ Data Validation**
+   - Format validation and standardization suggestions
+   - Impossible value detection (negative ages, invalid percentages)
+   - Text cleaning recommendations (whitespace, case consistency)
+
+### Preprocessing Output
+
+- **Priority Scoring**: 0-100 priority scores for each preprocessing category
+- **Urgency Assessment**: Low/Medium/High urgency classification
+- **Interactive Visualizations**: Priority charts, category breakdowns, and analysis charts
+- **Ready-to-Use Code**: Python code snippets for each recommendation
+- **Complete Script Generation**: Download a comprehensive preprocessing script
+- **Category-Specific Analysis**: Detailed charts for missing values, outliers, encoding strategies
+- **Quick Actions**: One-click data type display, missing values analysis, duplicate removal
+
+### Smart Recommendations
+
+- **Context-Aware**: Suggestions adapt based on data characteristics and size
+- **Prioritized**: Focus on high-impact preprocessing steps first
+- **Code-Ready**: Every suggestion includes executable Python code
+- **Export Options**: Download preprocessing scripts and suggestion reports
+- **Visual Feedback**: Interactive charts show preprocessing impact and priorities
+
+### Interactive Features
+
+- **Priority Dashboard**: Visual urgency gauge and category breakdown
+- **Tabbed Interface**: Organized suggestions by preprocessing category
+- **Code Snippets**: Copy-ready Python code for each recommendation
+- **Progress Tracking**: Clear priority scoring to guide preprocessing workflow
+- **Export Options**: Generate complete preprocessing scripts for implementation
 
 ## ⚡ Performance & Simplicity
 
@@ -287,8 +390,8 @@ pip install package_name
 - [x] **Custom Color Palettes**: User-selectable themes for all visualizations ✅
 - [x] **Time Series Analysis**: Comprehensive temporal analysis with trends and patterns ✅
 - [x] **Data Quality Scoring**: Overall dataset health metrics ✅
+- [x] **Data Preprocessing Suggestions**: Automated recommendations ✅
 - [ ] **PDF Export**: Generate downloadable reports
-- [ ] **Data Preprocessing Suggestions**: Automated recommendations
 
 ## 🙋‍♀️ Support
 
