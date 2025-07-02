@@ -8,7 +8,9 @@ Clean, focused UI without unnecessary sidebar options.
 
 import streamlit as st
 import pandas as pd
+from datetime import datetime
 from utils.file_loader import load_data
+from utils.pdf_report import generate_pdf_report
 from style import apply_global_style
 
 # Import tab modules
@@ -54,6 +56,44 @@ def render_file_uploader():
     return uploaded_file
 
 
+def render_pdf_export_section(df, uploaded_file=None):
+    """Render PDF export functionality."""
+    st.sidebar.markdown("---")
+    st.sidebar.subheader("📄 Export Report")
+
+    # Development status warning
+    st.sidebar.warning(
+        "⚠️ **Under Development**\n\nPDF export is currently in beta. The generated report includes basic analysis but may need formatting improvements.")
+
+    if st.sidebar.button("📊 Generate PDF Report (Beta)", type="secondary", use_container_width=True):
+        with st.sidebar.spinner("Generating basic PDF report..."):
+            try:
+                # Get dataset name from uploaded file
+                dataset_name = uploaded_file.name if uploaded_file else "Sample Dataset"
+
+                # Generate the PDF report
+                pdf_bytes = generate_pdf_report(df, dataset_name=dataset_name)
+
+                # Create download button
+                filename = f"vizzy_report_{datetime.now().strftime('%Y%m%d_%H%M%S')}.pdf"
+                st.sidebar.download_button(
+                    label="💾 Download PDF Report",
+                    data=pdf_bytes,
+                    file_name=filename,
+                    mime="application/pdf",
+                    use_container_width=True
+                )
+                st.sidebar.success(
+                    "✅ Basic PDF report generated successfully!")
+                st.sidebar.info(
+                    "💡 This is a beta feature. Future versions will include charts and enhanced formatting.")
+
+            except Exception as e:
+                st.sidebar.error(f"❌ Error generating PDF: {str(e)}")
+                st.sidebar.error(
+                    "Please try again or contact support if the issue persists.")
+
+
 def render_dataset_metrics(df):
     """Render basic dataset metrics."""
     col1, col2, col3, col4 = st.columns(4)
@@ -97,6 +137,9 @@ def main():
 
             # Display basic metrics
             render_dataset_metrics(df)
+
+            # Add PDF export functionality to sidebar
+            render_pdf_export_section(df, uploaded_file)
 
             st.markdown("---")
 

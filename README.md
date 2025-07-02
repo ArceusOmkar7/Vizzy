@@ -16,6 +16,7 @@ A **developer-friendly**, **Streamlit-powered** data visualization assistant tha
 - **🎨 Custom Color Palettes**: Choose from 12+ beautiful color schemes for all visualizations
 - **🎨 Modern Interface**: Clean, tab-based UI focused on essential insights
 - **📱 Responsive Design**: Works seamlessly on any screen size
+- **📄 PDF Export (Beta)**: Generate basic analysis reports - currently under development
 
 ## 🚀 Quick Start
 
@@ -347,6 +348,49 @@ The system evaluates your data across **8 key preprocessing areas**:
 - **Progress Tracking**: Clear priority scoring to guide preprocessing workflow
 - **Export Options**: Generate complete preprocessing scripts for implementation
 
+## 📄 PDF Report Generation
+
+Vizzy includes a comprehensive PDF report generator that creates professional, detailed analysis reports with a single click.
+
+### Report Contents
+
+The generated PDF reports include:
+
+1. **Executive Summary**: Key findings and recommendations at a glance
+2. **Dataset Overview**: Basic statistics, data types, and structure analysis
+3. **Data Quality Assessment**: Comprehensive quality scoring across 5 dimensions
+4. **Missing Values Analysis**: Detailed missing data patterns and recommendations
+5. **Distribution Analysis**: Statistical summaries for numeric columns
+6. **Correlation Analysis**: Strong relationships and correlation matrix insights
+7. **Preprocessing Recommendations**: Prioritized suggestions with code snippets
+8. **Appendix**: Complete column details and metadata
+
+### Report Features
+
+- **Professional Layout**: Clean, branded design with proper formatting
+- **Executive Summary**: High-level insights for stakeholders
+- **Visual Elements**: Tables, charts, and color-coded quality indicators
+- **Actionable Recommendations**: Specific steps with ready-to-use code
+- **Comprehensive Coverage**: All analysis areas in a single document
+- **Automated Generation**: One-click export from the sidebar
+- **Timestamped Reports**: Automatic filename with generation timestamp
+
+### Export Options
+
+- **One-Click Generation**: Simple button in the sidebar to generate reports
+- **Instant Download**: PDF downloads immediately after generation
+- **Custom Naming**: Automatic timestamped filenames for organization
+- **Progress Indication**: Real-time feedback during report generation
+- **Error Handling**: Graceful error messages if generation fails
+
+### Use Cases
+
+- **Stakeholder Reports**: Professional summaries for non-technical audiences
+- **Documentation**: Analysis documentation for project records
+- **Quality Audits**: Comprehensive data quality assessments
+- **Preprocessing Guides**: Step-by-step data cleaning instructions
+- **Archive Records**: Snapshot of analysis at specific points in time
+
 ## ⚡ Performance & Simplicity
 
 The new tab-based interface automatically handles performance optimization:
@@ -391,7 +435,7 @@ pip install package_name
 - [x] **Time Series Analysis**: Comprehensive temporal analysis with trends and patterns ✅
 - [x] **Data Quality Scoring**: Overall dataset health metrics ✅
 - [x] **Data Preprocessing Suggestions**: Automated recommendations ✅
-- [ ] **PDF Export**: Generate downloadable reports
+- [x] **PDF Export (Beta)**: Basic report generation implemented - needs charts and enhanced formatting 🚧
 
 ## 🙋‍♀️ Support
 
