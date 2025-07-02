@@ -8,8 +8,9 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import pandas as pd
 import numpy as np
+import streamlit as st
 from typing import Tuple
-from style import apply_chart_theme
+from style import apply_chart_theme, get_color_palette
 
 
 def plot_null_bar_chart(df: pd.DataFrame) -> plt.Figure:
@@ -39,7 +40,8 @@ def plot_null_bar_chart(df: pd.DataFrame) -> plt.Figure:
     fig, ax = plt.subplots(figsize=(12, 6))
 
     bars = ax.bar(range(len(null_counts)), null_counts.values,
-                  color=sns.color_palette("Reds_r", len(null_counts)))
+                  color=get_color_palette(len(null_counts),
+                                          palette_name=getattr(st.session_state, 'color_palette', 'Default (Husl)')))
 
     # Customize the plot
     ax.set_xlabel('Columns', fontweight='bold')

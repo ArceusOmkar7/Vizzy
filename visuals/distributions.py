@@ -8,6 +8,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import pandas as pd
 import numpy as np
+import streamlit as st
 from typing import List, Optional
 from style import apply_chart_theme, get_color_palette
 
@@ -49,7 +50,8 @@ def plot_numeric_distributions(df: pd.DataFrame, columns: Optional[List[str]] = 
     else:
         axes = axes.flatten()
 
-    colors = get_color_palette(len(numeric_cols))
+    colors = get_color_palette(len(numeric_cols),
+                               palette_name=getattr(st.session_state, 'color_palette', 'Default (Husl)'))
 
     for i, col in enumerate(numeric_cols):
         ax = axes[i]
@@ -141,7 +143,8 @@ def plot_box_plots(df: pd.DataFrame, columns: Optional[List[str]] = None) -> plt
                           notch=True, showmeans=True)
 
     # Color the boxes
-    colors = get_color_palette(len(data_to_plot))
+    colors = get_color_palette(len(data_to_plot),
+                               palette_name=getattr(st.session_state, 'color_palette', 'Default (Husl)'))
     for patch, color in zip(box_plot['boxes'], colors):
         patch.set_facecolor(color)
         patch.set_alpha(0.7)
@@ -225,7 +228,8 @@ def plot_distribution_comparison(df: pd.DataFrame, column: str,
                      rotation=45, ha='right')
 
         # Distribution by group (overlaid)
-        colors = get_color_palette(len(unique_groups))
+        colors = get_color_palette(len(unique_groups),
+                                   palette_name=getattr(st.session_state, 'color_palette', 'Default (Husl)'))
         # Limit to 5 for readability
         for i, group in enumerate(unique_groups[:5]):
             group_data_single = df[df[group_by] == group][column].dropna()

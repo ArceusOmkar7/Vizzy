@@ -8,6 +8,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import pandas as pd
 import numpy as np
+import streamlit as st
 from typing import List, Optional, Tuple
 from style import apply_chart_theme, get_color_palette
 
@@ -56,7 +57,8 @@ def plot_categorical_counts(df: pd.DataFrame, columns: Optional[List[str]] = Non
     else:
         axes = axes.flatten()
 
-    colors = get_color_palette(top_k)
+    colors = get_color_palette(top_k,
+                               palette_name=getattr(st.session_state, 'color_palette', 'Default (Husl)'))
 
     for i, col in enumerate(categorical_cols):
         ax = axes[i]
@@ -156,7 +158,8 @@ def plot_category_distribution_pie(df: pd.DataFrame, column: str,
     fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(16, 8))
 
     # Pie chart
-    colors = get_color_palette(len(plot_data))
+    colors = get_color_palette(len(plot_data),
+                               palette_name=getattr(st.session_state, 'color_palette', 'Default (Husl)'))
     wedges, texts, autotexts = ax1.pie(plot_data.values,
                                        labels=plot_data.index,
                                        autopct='%1.1f%%',

@@ -8,7 +8,8 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import pandas as pd
 import numpy as np
-from style import apply_chart_theme
+import streamlit as st
+from style import apply_chart_theme, get_color_palette
 
 
 def plot_data_types_summary(df: pd.DataFrame) -> plt.Figure:
@@ -26,7 +27,8 @@ def plot_data_types_summary(df: pd.DataFrame) -> plt.Figure:
     fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(15, 6))
 
     # Pie chart of data types
-    colors = sns.color_palette("Set3", len(dtype_counts))
+    colors = get_color_palette(len(dtype_counts),
+                               palette_name=getattr(st.session_state, 'color_palette', 'Default (Husl)'))
     wedges, texts, autotexts = ax1.pie(dtype_counts.values,
                                        labels=dtype_counts.index,
                                        autopct='%1.1f%%',
@@ -82,7 +84,8 @@ def plot_uniqueness_analysis(df: pd.DataFrame) -> plt.Figure:
 
     # Top plot: Unique counts
     bars1 = ax1.barh(range(len(sorted_data)), sorted_data['Unique_Count'],
-                     color=sns.color_palette("viridis", len(sorted_data)))
+                     color=get_color_palette(len(sorted_data),
+                                             palette_name=getattr(st.session_state, 'color_palette', 'Default (Husl)')))
 
     ax1.set_xlabel('Number of Unique Values', fontweight='bold')
     ax1.set_ylabel('Columns', fontweight='bold')
@@ -193,7 +196,8 @@ def plot_memory_usage(df: pd.DataFrame) -> plt.Figure:
 
     # Create horizontal bar chart
     bars = ax.barh(range(len(memory_usage_mb)), memory_usage_mb.values,
-                   color=sns.color_palette("plasma", len(memory_usage_mb)))
+                   color=get_color_palette(len(memory_usage_mb),
+                                           palette_name=getattr(st.session_state, 'color_palette', 'Default (Husl)')))
 
     ax.set_xlabel('Memory Usage (MB)', fontweight='bold')
     ax.set_ylabel('Columns', fontweight='bold')

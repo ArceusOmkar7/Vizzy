@@ -17,6 +17,7 @@ from components.missing_values import render_missing_values_tab
 from components.distributions import render_distributions_tab
 from components.correlations import render_correlations_tab
 from components.categorical import render_categorical_tab
+from components.color_settings import render_color_palette_settings, apply_palette_to_session
 
 
 def render_file_uploader():
@@ -41,6 +42,12 @@ def render_file_uploader():
         st.sidebar.success("✅ File uploaded successfully!")
         for key, value in file_details.items():
             st.sidebar.text(f"{key}: {value}")
+
+    st.sidebar.markdown("---")
+
+    # Color palette settings
+    selected_palette = render_color_palette_settings()
+    apply_palette_to_session(selected_palette)
 
     return uploaded_file
 
