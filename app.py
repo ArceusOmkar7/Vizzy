@@ -66,7 +66,7 @@ def render_pdf_export_section(df, uploaded_file=None):
         "⚠️ **Under Development**\n\nPDF export is currently in beta. The generated report includes basic analysis but may need formatting improvements.")
 
     if st.sidebar.button("📊 Generate PDF Report (Beta)", type="secondary", use_container_width=True):
-        with st.sidebar.spinner("Generating basic PDF report..."):
+        with st.spinner("Generating basic PDF report..."):
             try:
                 # Get dataset name from uploaded file
                 dataset_name = uploaded_file.name if uploaded_file else "Sample Dataset"
