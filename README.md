@@ -6,6 +6,7 @@ A **developer-friendly**, **Streamlit-powered** data visualization assistant tha
 
 - **📁 Easy File Upload**: Support for CSV and Excel files
 - **📋 Data Overview**: Clean data preview, types, and basic statistics
+- **🎯 Data Quality Scoring**: Comprehensive dataset health assessment with actionable insights
 - **❓ Missing Values Analysis**: Interactive heatmaps and detailed null analysis
 - **📊 Distribution Analysis**: Histograms and box plots for numeric data
 - **🔗 Correlation Analysis**: Correlation heatmaps with strength insights
@@ -95,7 +96,8 @@ vizzy/
 ├── utils/                   # Pure Python utilities
 │   ├── __init__.py
 │   ├── data_checks.py       # Data quality analysis functions
-│   └── file_loader.py       # File loading and caching
+│   ├── file_loader.py       # File loading and caching
+│   └── quality_engine.py    # Comprehensive data quality scoring engine
 ├── visuals/                 # Visualization functions
 │   ├── __init__.py
 │   ├── nulls.py             # Missing values visualizations
@@ -103,7 +105,8 @@ vizzy/
 │   ├── distributions.py     # Distribution analysis
 │   ├── correlation.py       # Correlation analysis
 │   ├── categories.py        # Categorical data analysis
-│   └── time_series.py       # Time series analysis and forecasting
+│   ├── time_series.py       # Time series analysis and forecasting
+│   └── quality_score.py     # Data quality visualization components
 ├── components/              # Tab-based UI components
 │   ├── __init__.py
 │   ├── data_overview.py     # Data overview tab
@@ -142,6 +145,11 @@ The app uses a consistent color scheme defined in `style.py`. You can customize:
 
 ### Data Overview Tab 📋
 
+- **Data Quality Assessment**: Overall quality score with letter grade (A-F)
+- **Quality Dimensions**: Breakdown across completeness, consistency, accuracy, uniqueness, and validity
+- **Interactive Quality Gauge**: Visual quality score with color-coded status
+- **Actionable Recommendations**: Specific suggestions for improving data quality
+- **Column Quality Heatmap**: Visual overview of quality issues by column
 - **Data Preview**: First N rows with customizable display count
 - **Basic Metrics**: Rows, columns, memory usage, missing values count
 - **Data Type Summary**: Visual breakdown of column types
@@ -178,6 +186,63 @@ The app uses a consistent color scheme defined in `style.py`. You can customize:
 - **Rolling Statistics**: Moving averages and rolling standard deviation
 - **Seasonal Decomposition**: Advanced trend and seasonality breakdown (requires statsmodels)
 - **DateTime Detection**: Automatic identification and conversion of date columns
+
+## 🎯 Data Quality Scoring
+
+Vizzy includes a comprehensive data quality assessment engine that automatically evaluates your dataset across multiple dimensions and provides actionable insights for improvement.
+
+### Quality Dimensions
+
+The scoring system evaluates your data across **5 key dimensions**:
+
+1. **📋 Completeness (25% weight)**
+   - Analyzes missing values across all columns
+   - Provides weighted scoring based on missing data patterns
+   - Identifies columns with critical missing data (>50%)
+
+2. **🔧 Consistency (20% weight)**
+   - Detects mixed data types within columns
+   - Identifies formatting issues (whitespace, case inconsistencies)
+   - Validates data type appropriateness
+
+3. **🎯 Accuracy (25% weight)**
+   - Statistical outlier detection using IQR method
+   - Validates logical constraints (e.g., no negative ages)
+   - Identifies suspicious patterns in categorical data
+
+4. **🔍 Uniqueness (15% weight)**
+   - Duplicate row detection and quantification
+   - ID column validation for uniqueness
+   - Low uniqueness pattern identification
+
+5. **✅ Validity (15% weight)**
+   - Format validation for emails, dates, and other structured data
+   - Range validation for temporal data
+   - Detection of numeric data stored as text
+
+### Quality Scoring Output
+
+- **Overall Score**: 0-100 with letter grades (A, B, C, D, F)
+- **Visual Dashboard**: Interactive gauge with color-coded status
+- **Dimension Breakdown**: Detailed scores for each quality aspect
+- **Actionable Recommendations**: Specific steps to improve data quality
+- **Column-Level Analysis**: Individual quality scores and issues per column
+- **Exportable Reports**: Download detailed quality assessments as CSV
+
+### Quality Grades
+
+- **A (90-100)**: Excellent quality, ready for analysis
+- **B (80-89)**: Good quality with minor issues
+- **C (70-79)**: Fair quality, some cleaning recommended
+- **D (60-69)**: Poor quality, substantial preprocessing needed
+- **F (0-59)**: Very poor quality, major cleaning required
+
+### Interactive Features
+
+- **Quality Gauge**: Real-time visual scoring with color indicators
+- **Heatmaps**: Column-level quality visualization (for datasets ≤20 columns)
+- **Expandable Reports**: Detailed quality breakdowns and recommendations
+- **Download Options**: Export quality reports for documentation
 
 ## ⚡ Performance & Simplicity
 
@@ -221,9 +286,8 @@ pip install package_name
 
 - [x] **Custom Color Palettes**: User-selectable themes for all visualizations ✅
 - [x] **Time Series Analysis**: Comprehensive temporal analysis with trends and patterns ✅
+- [x] **Data Quality Scoring**: Overall dataset health metrics ✅
 - [ ] **PDF Export**: Generate downloadable reports
-- [ ] **Machine Learning Insights**: Automated feature importance
-- [ ] **Data Quality Scoring**: Overall dataset health metrics
 - [ ] **Data Preprocessing Suggestions**: Automated recommendations
 
 ## 🙋‍♀️ Support
