@@ -13,6 +13,7 @@ A **developer-friendly**, **Streamlit-powered** data visualization assistant tha
 - **🔗 Correlation Analysis**: Correlation heatmaps with strength insights
 - **📂 Categorical Analysis**: Value counts and category distribution analysis
 - **📈 Time Series Analysis**: Trend analysis, seasonality detection, and temporal patterns
+- **🤖 AI-Powered Insights**: LLM-generated human-readable insights and recommendations
 - **🎨 Custom Color Palettes**: Choose from 12+ beautiful color schemes for all visualizations
 - **🎨 Modern Interface**: Clean, tab-based UI focused on essential insights
 - **📱 Responsive Design**: Works seamlessly on any screen size
@@ -24,6 +25,7 @@ A **developer-friendly**, **Streamlit-powered** data visualization assistant tha
 
 - Python 3.10 or higher
 - UV package manager (recommended) or pip
+- Google Gemini API key (free, for AI-powered insights)
 
 ### Installation
 
@@ -56,6 +58,17 @@ A **developer-friendly**, **Streamlit-powered** data visualization assistant tha
 
 4. **Open your browser** and navigate to `http://localhost:8501`
 
+### Getting Gemini API Key (for AI Insights)
+
+To use the AI-powered insights feature:
+
+1. Visit [Google AI Studio](https://aistudio.google.com/app/apikey)
+2. Sign in with your Google account
+3. Click "Create API Key"
+4. Copy the key and enter it in the 🤖 AI Insights tab
+
+**Note:** The API key is free and only stored for your current session.
+
 > **Note:** The `run.py` script automatically handles dependency installation and sample data creation.
 
 ### Generate Sample Datasets (Optional)
@@ -78,6 +91,7 @@ python create_sample_data.py
    - **📂 Categories**: Analyze categorical data and value frequencies
    - **📈 Time Series**: Analyze temporal patterns, trends, and seasonality
    - **🛠️ Preprocessing**: Get intelligent recommendations for data cleaning and preparation
+   - **🤖 AI Insights**: Generate human-readable insights using Google's Gemini AI
 4. **Interactive analysis**: Each tab provides focused, relevant insights
 5. **Export insights**: View summary tables and save analysis results
 
@@ -101,7 +115,8 @@ vizzy/
 │   ├── data_checks.py       # Data quality analysis functions
 │   ├── file_loader.py       # File loading and caching
 │   ├── quality_engine.py    # Comprehensive data quality scoring engine
-│   └── preprocessing_suggestions.py # Intelligent preprocessing recommendations engine
+│   ├── preprocessing_suggestions.py # Intelligent preprocessing recommendations engine
+│   └── insights_generator.py # LLM-powered insights generation
 ├── visuals/                 # Visualization functions
 │   ├── __init__.py
 │   ├── nulls.py             # Missing values visualizations
@@ -121,6 +136,7 @@ vizzy/
 │   ├── categorical.py       # Categorical analysis tab
 │   ├── time_series.py       # Time series analysis tab
 │   ├── preprocessing.py     # Data preprocessing suggestions tab
+│   ├── insights.py          # AI-powered insights tab
 │   └── color_settings.py    # Color palette configuration
 └── sample_data/             # Sample datasets for testing
     ├── sales_data.csv
@@ -205,6 +221,32 @@ The app uses a consistent color scheme defined in `style.py`. You can customize:
 - **Code Generation**: Ready-to-use Python scripts for all preprocessing steps
 - **Priority Dashboard**: Visual urgency assessment and category breakdown
 - **Export Options**: Download complete preprocessing scripts and reports
+
+### AI-Powered Insights Tab 🤖
+
+- **LLM Integration**: Powered by Google's Gemini AI for intelligent data analysis
+- **Human-Readable Insights**: Plain English summaries of key data patterns and findings
+- **Automated Analysis**: AI analyzes data quality, distributions, correlations, and business implications
+- **Actionable Recommendations**: Specific suggestions for data improvement and next steps
+- **Context-Aware**: Insights adapt based on your dataset's characteristics and patterns
+- **Export Options**: Download insights as text files for documentation and sharing
+- **API Key Management**: Secure, session-based API key storage (not saved permanently)
+- **Regeneration**: Refresh insights to get new perspectives on your data
+
+#### How AI Insights Work:
+
+1. **Data Analysis**: The system extracts comprehensive statistics from your dataset
+2. **Pattern Recognition**: AI identifies trends, correlations, quality issues, and anomalies
+3. **Business Context**: Insights are generated with practical, business-relevant interpretations
+4. **Quality Focus**: Emphasis on data quality issues and improvement recommendations
+5. **Actionable Output**: Clear, numbered insights that guide your next analytical steps
+
+#### Sample Insights:
+
+- "Sales data shows a 23% increase in Q4, with December being the strongest month"
+- "Customer age distribution is right-skewed with 15% missing values requiring attention"
+- "Strong correlation (0.82) between marketing spend and revenue suggests effective campaigns"
+- "High cardinality in product categories (847 unique values) may benefit from grouping"
 
 ## 🎯 Data Quality Scoring
 
@@ -435,7 +477,19 @@ pip install package_name
 - [x] **Time Series Analysis**: Comprehensive temporal analysis with trends and patterns ✅
 - [x] **Data Quality Scoring**: Overall dataset health metrics ✅
 - [x] **Data Preprocessing Suggestions**: Automated recommendations ✅
+- [x] **AI-Powered Insights**: LLM-generated insights using Google's Gemini API ✅
 - [x] **PDF Export (Beta)**: Basic report generation implemented - needs charts and enhanced formatting 🚧
+
+### Recently Added Features
+
+**🤖 AI-Powered Insights (New!)**
+
+- Powered by Google's Gemini AI for intelligent data analysis
+- Human-readable insights in plain English
+- Automatic analysis of data quality, patterns, and business implications
+- Free API key required (get yours at [Google AI Studio](https://aistudio.google.com/app/apikey))
+- Session-based secure API key storage
+- Export insights for documentation
 
 ## 🙋‍♀️ Support
 

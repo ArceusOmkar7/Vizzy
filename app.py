@@ -21,6 +21,7 @@ from components.correlations import render_correlations_tab
 from components.categorical import render_categorical_tab
 from components.time_series import render_time_series_tab
 from components.preprocessing import render_preprocessing_tab
+from components.insights import render_insights_tab
 from components.color_settings import render_color_palette_settings, apply_palette_to_session
 
 
@@ -144,14 +145,15 @@ def main():
             st.markdown("---")
 
             # Create tabs for different analysis types
-            tab1, tab2, tab3, tab4, tab5, tab6, tab7 = st.tabs([
+            tab1, tab2, tab3, tab4, tab5, tab6, tab7, tab8 = st.tabs([
                 "📋 Data Overview",
                 "❓ Missing Values",
                 "📊 Distributions",
                 "🔗 Correlations",
                 "📂 Categories",
                 "📈 Time Series",
-                "🛠️ Preprocessing"
+                "🛠️ Preprocessing",
+                "🤖 AI Insights"
             ])
 
             with tab1:
@@ -174,6 +176,9 @@ def main():
 
             with tab7:
                 render_preprocessing_tab(df)
+
+            with tab8:
+                render_insights_tab(df)
 
         except Exception as e:
             st.error(f"❌ Error loading data: {str(e)}")

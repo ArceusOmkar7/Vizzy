@@ -18,4 +18,5 @@ dependencies = [
     "plotly>=6.2.0",
     "reportlab>=4.0.0",
     "pillow>=10.0.0",
+    "google-generativeai>=0.8.5",
 ]
