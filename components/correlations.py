@@ -38,11 +38,13 @@ def render_correlations_tab(df):
         method = st.selectbox(
             "Method:",
             ["pearson", "spearman", "kendall"],
-            help="Pearson: linear relationships, Spearman: monotonic relationships"
+            help="Pearson: linear relationships, Spearman: monotonic relationships",
+            key="corr_method_selector"
         )
 
     with col3:
-        show_values = st.checkbox("Show values", value=True)
+        show_values = st.checkbox(
+            "Show values", value=True, key="corr_show_values")
 
     # Main correlation heatmap
     st.subheader("🌡️ Correlation Heatmap")
@@ -60,7 +62,8 @@ def render_correlations_tab(df):
         st.subheader("💪 Strong Correlations")
 
         # Find correlations above threshold
-        threshold = st.slider("Correlation threshold:", 0.1, 1.0, 0.7, 0.1)
+        threshold = st.slider("Correlation threshold:",
+                              0.1, 1.0, 0.7, 0.1, key="corr_threshold_slider")
 
         strong_corrs = find_strong_correlations(
             df[numeric_cols], threshold=threshold, method=method)

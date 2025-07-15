@@ -116,7 +116,8 @@ def render_data_overview_tab(df):
     col1, col2 = st.columns([3, 1])
 
     with col2:
-        n_rows = st.selectbox("Rows to display:", [5, 10, 20, 50], index=0)
+        n_rows = st.selectbox("Rows to display:", [
+                              5, 10, 20, 50], index=0, key="preview_rows_selector")
 
     with col1:
         st.dataframe(df.head(n_rows), use_container_width=True)

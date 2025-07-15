@@ -24,19 +24,11 @@ def check_dependencies():
 
 
 def install_dependencies():
-    """Install dependencies using UV or pip."""
+    """Install dependencies using pip."""
     print("📦 Installing dependencies...")
-
-    # Check if UV is available
-    try:
-        subprocess.run(["uv", "--version"], check=True, capture_output=True)
-        print("Using UV package manager...")
-        subprocess.run(["uv", "sync"], check=True)
-    except (subprocess.CalledProcessError, FileNotFoundError):
-        print("UV not found, using pip...")
-        subprocess.run([sys.executable, "-m", "pip", "install",
-                       "-r", "requirements.txt"], check=True)
-
+    print("Using pip package manager...")
+    subprocess.run([sys.executable, "-m", "pip", "install",
+                   "-r", "requirements.txt"], check=True)
     print("✅ Dependencies installed successfully!")
 
 
@@ -64,7 +56,6 @@ def main():
         except subprocess.CalledProcessError as e:
             print(f"❌ Error installing dependencies: {e}")
             print("Please install dependencies manually:")
-            print("  UV: uv sync")
             print("  Pip: pip install -r requirements.txt")
             sys.exit(1)
 

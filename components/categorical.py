@@ -35,10 +35,12 @@ def render_categorical_tab(df):
         st.subheader("🎯 Analysis Settings")
 
     with col2:
-        top_k = st.selectbox("Top categories:", [5, 10, 15, 20], index=1)
+        top_k = st.selectbox("Top categories:", [
+                             5, 10, 15, 20], index=1, key="cat_top_k_selector")
 
     with col3:
-        show_percentages = st.checkbox("Show percentages", value=True)
+        show_percentages = st.checkbox(
+            "Show percentages", value=True, key="cat_show_percentages")
 
     # Column selection
     if len(categorical_cols) > 1:
@@ -46,7 +48,8 @@ def render_categorical_tab(df):
             "Select columns to analyze:",
             categorical_cols,
             default=categorical_cols[:min(4, len(categorical_cols))],
-            help="Select up to 4 columns for detailed analysis"
+            help="Select up to 4 columns for detailed analysis",
+            key="cat_column_selector"
         )
     else:
         selected_cols = categorical_cols

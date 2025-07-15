@@ -126,7 +126,7 @@ def render_preprocessing_tab(df):
     col1, col2, col3 = st.columns(3)
 
     with col1:
-        if st.button("🧹 Remove Duplicates", help="Remove duplicate rows from the dataset"):
+        if st.button("🧹 Remove Duplicates", help="Remove duplicate rows from the dataset", key="remove_duplicates_btn"):
             duplicate_count = df.duplicated().sum()
             if duplicate_count > 0:
                 st.success(f"Would remove {duplicate_count} duplicate rows")
@@ -135,7 +135,7 @@ def render_preprocessing_tab(df):
                 st.info("No duplicate rows found")
 
     with col2:
-        if st.button("📝 Show Data Types", help="Display current data types and optimization suggestions"):
+        if st.button("📝 Show Data Types", help="Display current data types and optimization suggestions", key="show_dtypes_btn"):
             st.write("**Current Data Types:**")
             dtype_df = pd.DataFrame({
                 'Column': df.columns,
@@ -145,7 +145,7 @@ def render_preprocessing_tab(df):
             st.dataframe(dtype_df, use_container_width=True)
 
     with col3:
-        if st.button("🔍 Missing Values", help="Show detailed missing values analysis"):
+        if st.button("🔍 Missing Values", help="Show detailed missing values analysis", key="show_missing_btn"):
             missing_df = pd.DataFrame({
                 'Column': df.columns,
                 'Missing Count': df.isnull().sum(),
@@ -176,7 +176,7 @@ def render_preprocessing_tab(df):
 
     with col2:
         # Export data quality + preprocessing combined report
-        if st.button("📋 Generate Combined Report", help="Create comprehensive data quality + preprocessing report"):
+        if st.button("📋 Generate Combined Report", help="Create comprehensive data quality + preprocessing report", key="generate_report_btn"):
             st.info(
                 "Combined report feature coming soon! For now, use individual reports from each tab.")
 

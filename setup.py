@@ -37,58 +37,30 @@ def check_python_version():
 
 
 def check_package_manager():
-    """Check which package manager is available."""
-    print("\n📦 Checking package managers...")
-
-    # Check for UV
-    try:
-        result = subprocess.run(["uv", "--version"],
-                                capture_output=True, text=True)
-        if result.returncode == 0:
-            print("✅ UV package manager found - Recommended!")
-            return "uv"
-    except FileNotFoundError:
-        pass
+    """Check if pip is available."""
+    print("\n📦 Checking package manager...")
 
     # Check for pip
     try:
         result = subprocess.run(
-            [sys.executable, "-m", "pip", "--version"], capture_output=True, text=True)
+            ["pip", "--version"], capture_output=True, text=True)
         if result.returncode == 0:
             print("✅ pip package manager found")
-            return "pip"
+            return True
     except FileNotFoundError:
         pass
 
-    print("❌ No compatible package manager found!")
+    print("❌ pip package manager not found!")
     return None
 
 
-def install_uv():
-    """Install UV package manager."""
-    print("\n🚀 Installing UV package manager...")
-    system = platform.system().lower()
-
-    if system == "windows":
-        print("Run this command in PowerShell:")
-        print("   powershell -c \"irm https://astral.sh/uv/install.ps1 | iex\"")
-    else:
-        print("Run this command in your terminal:")
-        print("   curl -LsSf https://astral.sh/uv/install.sh | sh")
-
-    print("\nAfter installation, restart your terminal and run this script again.")
-
-
 def install_dependencies(package_manager):
-    """Install project dependencies."""
+    """Install project dependencies using pip."""
     print(f"\n📚 Installing dependencies using {package_manager}...")
 
     try:
-        if package_manager == "uv":
-            subprocess.run(["uv", "sync"], check=True)
-        else:  # pip
-            subprocess.run([sys.executable, "-m", "pip", "install",
-                           "-r", "requirements.txt"], check=True)
+        subprocess.run(["pip", "install",
+                       "-r", "requirements.txt"], check=True)
 
         print("✅ Dependencies installed successfully!")
         return True
@@ -125,8 +97,7 @@ def print_usage_instructions():
     print("   • Use the sample data in 'sample_data/' folder to test")
     print()
     print("3. 🎯 SELECT VISUALIZATIONS:")
-    print("   • Use the sidebar to choose which charts to generate")
-    print("   • Start with basic options, then explore advanced features")
+    print("   • Use the tabs to choose what to analyse")
     print()
     print("4. 📊 EXPLORE YOUR DATA:")
     print("   • View missing values patterns")
@@ -162,25 +133,18 @@ def main():
     # Check package manager
     package_manager = check_package_manager()
     if not package_manager:
-        print("\n💡 Recommendation: Install UV for better dependency management")
-        install_uv()
+        print("\n❌ pip is required for dependency management")
+        print("   Please ensure pip is installed and try again.")
         return
 
     # Install dependencies
-    if package_manager == "uv":
-        print("\n📋 Using UV for dependency management (recommended)")
-    else:
-        print("\n📋 Using pip for dependency management")
-        print("   💡 Consider installing UV for faster dependency resolution")
+    print("\n📋 Using pip for dependency management")
 
     if not install_dependencies(package_manager):
         print("\n🔧 TROUBLESHOOTING:")
         print("   • Check your internet connection")
         print("   • Try running the installation command manually:")
-        if package_manager == "uv":
-            print("     uv sync")
-        else:
-            print("     pip install -r requirements.txt")
+        print("     pip install -r requirements.txt")
         return
 
     # Create sample data

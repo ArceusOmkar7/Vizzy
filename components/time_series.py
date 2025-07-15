@@ -65,7 +65,8 @@ def render_time_series_tab(df):
         selected_datetime_col = st.selectbox(
             "Select DateTime Column:",
             all_datetime_options,
-            help="Choose the column containing date/time information"
+            help="Choose the column containing date/time information",
+            key="ts_datetime_col_selector"
         )
 
     # Prepare data for the selected datetime column
@@ -92,17 +93,20 @@ def render_time_series_tab(df):
             selected_value_col = st.selectbox(
                 "Select Value Column:",
                 numeric_cols,
-                help="Choose the numeric column to analyze over time"
+                help="Choose the numeric column to analyze over time",
+                key="ts_value_col_selector"
             )
 
         # Additional options
         col3, col4 = st.columns(2)
 
         with col3:
-            show_patterns = st.checkbox("Show Pattern Analysis", value=True)
+            show_patterns = st.checkbox(
+                "Show Pattern Analysis", value=True, key="ts_show_patterns")
 
         with col4:
-            show_rolling = st.checkbox("Show Rolling Statistics", value=True)
+            show_rolling = st.checkbox(
+                "Show Rolling Statistics", value=True, key="ts_show_rolling")
 
     except Exception as e:
         st.error(f"Error preparing time series data: {str(e)}")
@@ -211,7 +215,8 @@ def render_time_series_tab(df):
             window_input = st.text_input(
                 "Rolling Windows (comma-separated):",
                 value=",".join(map(str, default_windows)),
-                help="Enter window sizes separated by commas (e.g., 7,30,90)"
+                help="Enter window sizes separated by commas (e.g., 7,30,90)",
+                key="ts_rolling_windows_input"
             )
 
         try:
@@ -239,7 +244,7 @@ def render_time_series_tab(df):
         This analysis requires the `statsmodels` library.
         """)
 
-        if st.button("Run Seasonal Decomposition"):
+        if st.button("Run Seasonal Decomposition", key="seasonal_decomp_btn"):
             try:
                 # Determine seasonal period
                 data_length = len(ts_data)

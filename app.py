@@ -124,6 +124,10 @@ def main():
     # Apply global styling
     apply_global_style()
 
+    # Initialize session state for stable tab behavior
+    if 'active_tab' not in st.session_state:
+        st.session_state.active_tab = 0
+
     # Main title
     st.title("📊 Vizzy")
     st.markdown("Upload your CSV or Excel file to get instant data insights!")

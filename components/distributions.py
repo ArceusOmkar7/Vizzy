@@ -43,11 +43,13 @@ def render_distributions_tab(df):
         selected_cols = st.multiselect(
             "Select specific columns (optional - leave empty for all):",
             numeric_cols,
-            help="Choose specific columns to analyze, or leave empty to analyze all numeric columns"
+            help="Choose specific columns to analyze, or leave empty to analyze all numeric columns",
+            key="dist_column_selector"
         )
 
     with col2:
-        n_bins = st.slider("Number of histogram bins:", 10, 50, 30)
+        n_bins = st.slider("Number of histogram bins:", 10,
+                           50, 30, key="dist_bins_slider")
 
     # Use selected columns or all numeric columns
     cols_to_analyze = selected_cols if selected_cols else numeric_cols

@@ -1,5 +1,5 @@
 # Vizzy Requirements
-# Generated from pyproject.toml for compatibility
+# Core dependencies for data visualization and analysis
 
 streamlit>=1.46.0
 pandas>=2.3.0
@@ -17,3 +17,4 @@ statsmodels>=0.14.4  # For advanced time series analysis (seasonal decomposition
 reportlab>=4.0.0  # For PDF report generation
 pillow>=10.0.0   # For image handling in PDF reports
 google-generativeai>=0.3.0  # For LLM-powered insights generation
+python-dotenv>=1.0.0  # For environment variable management

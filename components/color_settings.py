@@ -29,11 +29,13 @@ def render_color_palette_settings():
                 "Select Color Palette:",
                 available_palettes,
                 index=0,
-                help="Choose a color scheme that will be applied to all charts"
+                help="Choose a color scheme that will be applied to all charts",
+                key="palette_selector"
             )
 
         with col2:
-            show_preview = st.checkbox("Show Preview", value=False)
+            show_preview = st.checkbox(
+                "Show Preview", value=False, key="show_palette_preview")
 
         # Show palette preview
         if show_preview:
@@ -45,7 +47,7 @@ def render_color_palette_settings():
                 st.error(f"Error previewing palette: {str(e)}")
 
         # Show color codes for advanced users
-        if st.checkbox("Show Color Codes", value=False):
+        if st.checkbox("Show Color Codes", value=False, key="show_color_codes"):
             colors = get_color_palette(8, selected_palette)
             st.markdown("**Color Codes:**")
 
@@ -99,4 +101,5 @@ def apply_palette_to_session(palette_name):
 
     if st.session_state.color_palette != palette_name:
         st.session_state.color_palette = palette_name
-        st.rerun()
+        # Set flag instead of rerun to avoid tab switching
+        st.session_state.palette_changed = True

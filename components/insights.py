@@ -11,6 +11,7 @@ from utils.insights_generator import (
     generate_llm_insights,
     display_insights
 )
+from utils.state_management import show_success_if_flag, show_info_if_flag
 
 
 def render_insights_tab(df: pd.DataFrame):
@@ -31,24 +32,41 @@ def render_insights_tab(df: pd.DataFrame):
     # API Configuration Section
     st.subheader("🔑 API Configuration")
 
-    with st.expander("ℹ️ How to get your Gemini API Key", expanded=False):
+    with st.expander("ℹ️ API Key Setup Options", expanded=False):
         st.markdown("""
+        **Option 1: Environment File (Recommended)**
+        1. Copy `.env.example` to `.env` in your project folder
+        2. Edit `.env` and add: `GEMINI_API_KEY=your_actual_key_here`
+        3. Restart the application
+        
+        **Option 2: Manual Entry**
+        - Enter your API key below
+        - Optionally save for future sessions
+        
+        **Get your API key:**
         1. Visit [Google AI Studio](https://aistudio.google.com/app/apikey)
         2. Sign in with your Google account
         3. Click "Create API Key"
-        4. Copy the API key and paste it below
+        4. Copy the API key
         
-        **Note:** The API key is stored only for this session and is not saved permanently.
+        **Security Note:** Environment files are more secure and persist across sessions.
         """)
 
     # Configure API
     api_configured = configure_gemini_api()
 
     if not api_configured:
-        st.warning("⚠️ Please enter your Gemini API key to generate insights.")
-        st.stop()
+        st.warning(
+            "⚠️ Please configure your Gemini API key above to generate insights.")
+        st.info("💡 **Quick Setup:** Copy `.env.example` to `.env` and add your API key for automatic configuration!")
+        return  # Use return instead of st.stop() to avoid potential issues
 
-    st.success("✅ API configured successfully!")
+    # Show success messages for API configuration
+    show_success_if_flag(
+        'api_key_entered', "✅ API key configured successfully!")
+    show_success_if_flag('env_key_loaded', "✅ API key loaded from .env file!")
+    show_info_if_flag('api_key_changed',
+                      "🔄 Please enter your new API key below.")
 
     # Generate Insights Section
     st.subheader("🔍 Generate Insights")
@@ -68,7 +86,8 @@ def render_insights_tab(df: pd.DataFrame):
             "🚀 Generate AI Insights",
             type="primary",
             use_container_width=True,
-            help="Analyze your dataset and generate intelligent insights"
+            help="Analyze your dataset and generate intelligent insights",
+            key="generate_insights_btn"
         )
 
     # Generate and display insights
@@ -90,6 +109,11 @@ def render_insights_tab(df: pd.DataFrame):
     # Display stored insights if available
     if hasattr(st.session_state, 'generated_insights') and st.session_state.generated_insights:
         st.markdown("---")
+
+        # Show success messages for actions
+        show_success_if_flag('insights_regenerated',
+                             "✅ Insights regenerated successfully!")
+
         display_insights(st.session_state.generated_insights)
 
         # Additional options
@@ -99,21 +123,28 @@ def render_insights_tab(df: pd.DataFrame):
         col1, col2, col3 = st.columns(3)
 
         with col1:
-            if st.button("🔄 Regenerate Insights", use_container_width=True):
+            if st.button("🔄 Regenerate Insights", use_container_width=True, key="regenerate_insights_btn"):
                 with st.spinner("🤖 Regenerating insights..."):
                     new_insights = generate_llm_insights(df)
                     if new_insights:
                         st.session_state.generated_insights = new_insights
-                        st.rerun()
+                        # Use session state flag to show success message instead of rerun
+                        st.session_state.insights_regenerated = True
 
         with col2:
-            if st.button("🧹 Clear Insights", use_container_width=True):
+            if st.button("🧹 Clear Insights", use_container_width=True, key="clear_insights_btn"):
                 if hasattr(st.session_state, 'generated_insights'):
                     del st.session_state.generated_insights
-                st.rerun()
+                # Use session state flag instead of rerun to avoid tab switching
+                st.session_state.insights_cleared = True
 
         with col3:
             st.markdown("💡 Use other tabs for detailed analysis")
+
+    # Show cleared message if insights were just cleared
+    elif hasattr(st.session_state, 'insights_cleared') and st.session_state.insights_cleared:
+        show_info_if_flag('insights_cleared',
+                          "🧹 Insights cleared successfully!")
 
     # Tips section
     elif api_configured:

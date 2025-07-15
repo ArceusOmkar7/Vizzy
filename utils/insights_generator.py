@@ -1,7 +1,7 @@
 """
 LLM-powered insights generator for Vizzy
 
-Uses Google's Gemini API to generate human-readable insights from data analysis.
+Uses Google's Gemini API to generate human-readable insights from data.
 """
 
 import streamlit as st
@@ -9,8 +9,10 @@ import pandas as pd
 import numpy as np
 from typing import Dict, List, Any, Optional
 import json
+import os
+from pathlib import Path
 
-# Try to import Google Generative AI, handle gracefully if not available
+# Try to import required packages
 try:
     import google.generativeai as genai
     GEMINI_AVAILABLE = True
@@ -19,33 +21,162 @@ except ImportError:
     st.error(
         "Google Generative AI package not installed. Please run: pip install google-generativeai")
 
+try:
+    from dotenv import load_dotenv
+    DOTENV_AVAILABLE = True
+except ImportError:
+    DOTENV_AVAILABLE = False
+
 from utils.data_checks import analyze_null_values, analyze_data_types
 from utils.quality_engine import DataQualityEngine
 
 
+def load_api_key_from_env():
+    """Load API key from .env file if available."""
+    if not DOTENV_AVAILABLE:
+        return None
+
+    # Load .env file
+    env_path = Path(".env")
+    if env_path.exists():
+        load_dotenv(env_path)
+        return os.getenv("GEMINI_API_KEY")
+    return None
+
+
+def save_api_key_to_file(api_key: str):
+    """Save API key to a local file for persistence."""
+    try:
+        key_file = Path(".streamlit") / "api_key.txt"
+        key_file.parent.mkdir(exist_ok=True)
+        key_file.write_text(api_key)
+        return True
+    except Exception:
+        return False
+
+
+def load_api_key_from_file():
+    """Load API key from local file."""
+    try:
+        key_file = Path(".streamlit") / "api_key.txt"
+        if key_file.exists():
+            return key_file.read_text().strip()
+    except Exception:
+        pass
+    return None
+
+
+def should_save_api_key():
+    """Check if API key should be saved based on environment variable."""
+    if DOTENV_AVAILABLE:
+        load_dotenv(Path(".env"), override=False)
+        return os.getenv("SAVE_API_KEY", "false").lower() == "true"
+    return False
+
+
 def configure_gemini_api():
-    """Configure the Gemini API with user's API key."""
+    """Configure the Gemini API with user's API key from various sources."""
     if not GEMINI_AVAILABLE:
         st.error(
             "❌ Google Generative AI package is not available. Please install it first.")
         return False
 
-    # Check if API key is already configured
+    # Initialize session state
     if 'gemini_api_key' not in st.session_state:
         st.session_state.gemini_api_key = None
 
-    # Get API key from user
-    api_key = st.text_input(
-        "🔑 Enter your Gemini API Key",
-        type="password",
-        value=st.session_state.gemini_api_key or "",
-        help="Get your free API key from https://makersuite.google.com/app/apikey"
-    )
+    # Try to load API key from various sources if not already in session
+    if not st.session_state.gemini_api_key:
+        # 1. Try loading from .env file
+        env_key = load_api_key_from_env()
+        if env_key:
+            st.session_state.gemini_api_key = env_key
+            st.info("✅ API key loaded from .env file")
+        else:
+            # 2. Try loading from saved file
+            saved_key = load_api_key_from_file()
+            if saved_key:
+                st.session_state.gemini_api_key = saved_key
+                st.info("✅ API key loaded from saved settings")
 
-    if api_key:
-        st.session_state.gemini_api_key = api_key
+    # Display current status
+    if st.session_state.gemini_api_key:
+        masked_key = st.session_state.gemini_api_key[:8] + "..." + st.session_state.gemini_api_key[-4:] if len(
+            st.session_state.gemini_api_key) > 12 else "***"
+        st.success(f"🔑 API key configured: {masked_key}")
+
+        # Option to clear/change key
+        col1, col2 = st.columns([3, 1])
+        with col2:
+            if st.button("🔄 Change Key", help="Clear current API key and enter a new one", key="change_api_key_btn"):
+                st.session_state.gemini_api_key = None
+                # Use session state flag instead of rerun to avoid tab switching
+                st.session_state.api_key_changed = True
+
+    # Get API key from user if not available
+    if not st.session_state.gemini_api_key:
+        st.markdown("### 🔑 API Key Setup")
+
+        # Show setup options
+        setup_option = st.radio(
+            "Choose your preferred setup method:",
+            ["� Enter manually", "📁 Use .env file"],
+            help="Manual entry is temporary, .env file persists across sessions"
+        )
+
+        if setup_option == "📁 Use .env file":
+            st.info("""
+            **Setup Instructions:**
+            1. Copy `.env.example` to `.env` in your project folder
+            2. Edit `.env` and add your API key: `GEMINI_API_KEY=your_actual_key_here`
+            3. Refresh this page
+            
+            **Benefits:** API key persists across sessions, more secure than manual entry
+            """)
+
+            if st.button("🔄 Check for .env file", type="secondary", key="check_env_btn"):
+                env_key = load_api_key_from_env()
+                if env_key:
+                    st.session_state.gemini_api_key = env_key
+                    st.session_state.env_key_loaded = True
+                else:
+                    st.warning(
+                        "No API key found in .env file. Please check your setup.")
+
+        else:  # Manual entry
+            api_key = st.text_input(
+                "🔑 Enter your Gemini API Key",
+                type="password",
+                placeholder="Enter your API key here...",
+                help="Get your free API key from https://aistudio.google.com/app/apikey",
+                key="manual_api_key_input"
+            )
+
+            # Option to save the key
+            save_key = st.checkbox(
+                "💾 Remember this API key for future sessions",
+                help="Saves API key locally (not recommended for shared computers)",
+                key="save_api_key_checkbox"
+            )
+
+            if api_key:
+                st.session_state.gemini_api_key = api_key
+
+                # Save if requested
+                if save_key:
+                    if save_api_key_to_file(api_key):
+                        st.success("✅ API key saved for future sessions")
+                    else:
+                        st.warning(
+                            "⚠️ Could not save API key, but it will work for this session")
+
+                # Set a flag instead of rerun to avoid tab switching
+                st.session_state.api_key_entered = True
+
+    # Configure the API if we have a key
+    if st.session_state.gemini_api_key:
         try:
-            genai.configure(api_key=api_key)
+            genai.configure(api_key=st.session_state.gemini_api_key)
             return True
         except Exception as e:
             st.error(f"❌ Error configuring API: {str(e)}")
