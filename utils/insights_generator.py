@@ -1,16 +1,26 @@
 """
 LLM-powered insights generator for Vizzy
-
-Uses Google's Gemini API to generate human-readable insights from data.
+Uses Google's Gemini API to generate human-readable insights from data
 """
 
-import streamlit as st
-import pandas as pd
-import numpy as np
-from typing import Dict, List, Any, Optional
-import json
-import os
+# Show setup options
+from utils.quality_engine import DataQualityEngine
+from utils.data_checks import analyze_null_values, analyze_data_types
 from pathlib import Path
+import os
+import json
+from typing import Dict, List, Any, Optional
+import numpy as np
+import pandas as pd
+import streamlit as st
+
+setup_option = st.radio(
+    "Choose your preferred setup method:",
+    ["📝 Enter manually", "📁 Use .env file"],
+    help="Manual entry is temporary, .env file persists across sessions",
+    key="api_setup_method_radio"
+)
+
 
 # Try to import required packages
 try:
@@ -26,9 +36,6 @@ try:
     DOTENV_AVAILABLE = True
 except ImportError:
     DOTENV_AVAILABLE = False
-
-from utils.data_checks import analyze_null_values, analyze_data_types
-from utils.quality_engine import DataQualityEngine
 
 
 def load_api_key_from_env():
@@ -126,12 +133,12 @@ def configure_gemini_api():
 
         if setup_option == "📁 Use .env file":
             st.info("""
-            **Setup Instructions:**
+            **Setup Instructions: **
             1. Copy `.env.example` to `.env` in your project folder
-            2. Edit `.env` and add your API key: `GEMINI_API_KEY=your_actual_key_here`
+            2. Edit `.env` and add your API key: `GEMINI_API_KEY = your_actual_key_here`
             3. Refresh this page
-            
-            **Benefits:** API key persists across sessions, more secure than manual entry
+
+            **Benefits: ** API key persists across sessions, more secure than manual entry
             """)
 
             if st.button("🔄 Check for .env file", type="secondary", key="check_env_btn"):
@@ -346,29 +353,31 @@ Missing Values:
     prompt += """
 Generate exactly 6-8 clear, actionable insights as complete bullet points. Each insight should be a full, complete sentence.
 
-Format each insight as:
-• [Complete insight about the data with proper punctuation]
+Format your response in markdown with proper formatting:
+
+## Key Data Insights
+
+• **Data Quality**: [Insight about completeness, missing values, duplicates]
+• **Statistical Patterns**: [Insight about distributions, outliers, ranges]  
+• **Correlations**: [Insight about relationships between variables]
+• **Business Implications**: [Insight about actionable findings]
+• **Trends & Patterns**: [Insight about temporal or categorical patterns]
+• **Data Recommendations**: [Insight about data improvement opportunities]
 
 Example format:
-• Dataset quality is excellent with only 2% missing values across all columns.
-• Revenue shows strong seasonal patterns with Q4 being 40% higher than average quarters.
-• Customer segments are well-balanced across all geographic regions.
+• **Data Quality**: Dataset quality is **excellent** with only 2% missing values across all columns.
+• **Revenue Patterns**: Revenue shows **strong seasonal patterns** with Q4 being **40% higher** than average quarters.
+• **Geographic Distribution**: Customer segments are **well-balanced** across all geographic regions.
 
 Requirements:
+- Use **bold** text for key terms and numbers
 - Each insight must be a complete sentence ending with proper punctuation
 - Focus on the most important and actionable findings
 - Use simple, clear business language
 - Provide specific numbers and percentages when relevant
 - Ensure each insight adds unique value
 
-Focus areas:
-1. Data quality and completeness assessment
-2. Statistical patterns and distribution insights  
-3. Correlation and relationship findings
-4. Business implications and opportunities
-5. Actionable recommendations for improvement
-
-Generate complete, well-formed insights only. Do not include partial sentences or truncated thoughts."""
+Generate complete, well-formed markdown insights only. Use proper markdown formatting with bold text for emphasis."""
 
     return prompt
 
@@ -504,66 +513,76 @@ def generate_llm_insights(df: pd.DataFrame) -> Optional[List[str]]:
 
 def display_insights(insights: List[str]):
     """
-    Display the generated insights in a nice format.
+    Display the generated insights in a nice format with markdown support.
 
     Args:
         insights (List[str]): List of insight strings
     """
     st.markdown("### 🔍 Key Insights")
 
-    for i, insight in enumerate(insights, 1):
-        # Clean up the insight text
-        clean_insight = insight.strip()
+    # Convert markdown formatting to HTML for proper display
+    def convert_markdown_to_html(text):
+        """Convert basic markdown to HTML"""
+        import re
+        # Convert **text** to <strong>text</strong>
+        text = re.sub(r'\*\*(.*?)\*\*', r'<strong>\1</strong>', text)
+        # Convert *text* to <em>text</em>
+        text = re.sub(r'\*(.*?)\*', r'<em>\1</em>', text)
+        return text
 
+    # Convert insights to HTML format
+    html_insights = []
+    for i, insight in enumerate(insights, 1):
+        clean_insight = insight.strip()
         # Remove surrounding quotes if present
         if clean_insight.startswith('"') and clean_insight.endswith('"'):
             clean_insight = clean_insight[1:-1]
         if clean_insight.startswith("'") and clean_insight.endswith("'"):
             clean_insight = clean_insight[1:-1]
-
-        # Remove any remaining bullet points that might have been included
+        # Remove any remaining bullet points
         clean_insight = clean_insight.lstrip('•-* ').strip()
-
-        # Remove any remaining markdown artifacts
-        clean_insight = clean_insight.replace(
-            '**', '').replace('__', '').replace('***', '')
-        clean_insight = clean_insight.replace('`', '').replace('~~', '')
-
-        # Ensure the insight starts with a capital letter
+        # Ensure starts with capital letter
         if clean_insight and not clean_insight[0].isupper():
             clean_insight = clean_insight[0].upper() + clean_insight[1:]
 
-        # Display with custom styling using st.container for better control
-        with st.container():
-            try:
-                # Use a simpler, cleaner display format with HTML
-                st.markdown(f"""
-                <div style="
-                    padding: 16px; 
-                    margin: 12px 0; 
-                    background-color: #f0f2f6; 
-                    border-left: 4px solid #1f77b4; 
-                    border-radius: 6px;
-                    font-size: 16px;
-                    line-height: 1.6;
-                    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-                ">
-                    <span style="font-weight: 600; color: #1f77b4;">{i}.</span> 
-                    <span style="color: #333;">{clean_insight}</span>
-                </div>
-                """, unsafe_allow_html=True)
-            except Exception:
-                # Fallback to simple markdown if HTML fails
-                st.markdown(f"**{i}.** {clean_insight}")
-                st.markdown("")
+        # Convert to HTML and add numbering
+        html_insight = convert_markdown_to_html(clean_insight)
+        html_insights.append(f"<strong>{i}.</strong> {html_insight}")
+
+    # Create the complete HTML container with insights
+    insights_html = f"""
+    <div style="
+        padding: 24px; 
+        margin: 16px 0; 
+        background: linear-gradient(135deg, #f8f9ff 0%, #f0f2f6 100%);
+        border: 1px solid #e1e5e9;
+        border-radius: 12px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.07);
+        border-left: 6px solid #1f77b4;
+    ">
+        <div style="
+            font-size: 16px;
+            line-height: 1.7;
+            color: #2c3e50;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+        ">
+            {'<br><br>'.join(html_insights)}
+        </div>
+    </div>
+    """
+
+    st.markdown(insights_html, unsafe_allow_html=True)
 
     # Add export option
     clean_insights_for_export = []
     for i, insight in enumerate(insights, 1):
-        clean_text = insight.strip().replace(
-            '**', '').replace('__', '').replace('***', '')
-        clean_text = clean_text.replace(
-            '`', '').replace('~~', '').lstrip('•-* ')
+        clean_text = insight.strip()
+        # Remove surrounding quotes
+        if clean_text.startswith('"') and clean_text.endswith('"'):
+            clean_text = clean_text[1:-1]
+        if clean_text.startswith("'") and clean_text.endswith("'"):
+            clean_text = clean_text[1:-1]
+        clean_text = clean_text.lstrip('•-* ').strip()
         clean_insights_for_export.append(f"{i}. {clean_text}")
 
     insights_text = "\n".join(clean_insights_for_export)
@@ -579,5 +598,6 @@ def display_insights(insights: List[str]):
             data=insights_text,
             file_name="data_insights.txt",
             mime="text/plain",
-            use_container_width=True
+            use_container_width=True,
+            key="download_insights_btn"
         )

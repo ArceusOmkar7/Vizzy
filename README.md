@@ -22,7 +22,7 @@ A **Streamlit-powered** data visualization tool that provides instant, comprehen
 ### Prerequisites
 
 - Python 3.10+
-- [Google Gemini API key](https://aistudio.google.com/app/apikey) (free)
+- [Google Gemini API key](https://aistudio.google.com/app/apikey)
 
 ### Installation
 
@@ -55,8 +55,6 @@ python run.py
 
 Open your browser at `http://localhost:8501`
 
-![Getting Started](screenshots/getting-started.png)
-
 ## 📖 Usage
 
 1. **Upload Data** - Drag & drop CSV/Excel files
@@ -71,8 +69,6 @@ Open your browser at `http://localhost:8501`
    - 🛠️ **Preprocessing** - Smart cleaning suggestions
    - 🤖 **AI Insights** - LLM-powered analysis
 4. **Export Results** - Download insights and reports
-
-![Analysis Tabs](screenshots/analysis-tabs.png)
 
 ### Supported Formats
 
@@ -120,6 +116,15 @@ vizzy/
 - **Google Gemini Integration** - Advanced pattern recognition
 - **Human-Readable Insights** - Plain English explanations
 - **Business Context** - Practical recommendations
+
+![Distribution Analysis](screenshots/distribution-analysis.png)
+
+### Distribution Analysis
+
+- **Interactive Histograms** - Customizable bin sizes and overlays
+- **Box Plot Insights** - Outlier detection and quartile analysis
+- **Multi-Column Support** - Compare distributions side-by-side
+- **Statistical Summaries** - Mean, median, skewness, and kurtosis
 
 ## 🛠️ Development
 
