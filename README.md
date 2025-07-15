@@ -155,12 +155,6 @@ pip freeze > requirements.txt
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-## 🙋‍♀️ Support
-
-- **Issues**: [GitHub Issues](../../issues)
-- **Discussions**: [GitHub Discussions](../../discussions)
-- **Email**: [your-email@example.com](mailto:your-email@example.com)
-
 ---
 
 ⭐ **Star this repo** if you find it useful!
