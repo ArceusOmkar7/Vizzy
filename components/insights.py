@@ -32,32 +32,34 @@ def render_insights_tab(df: pd.DataFrame):
     # API Configuration Section
     st.subheader("🔑 API Configuration")
 
-    with st.expander("ℹ️ API Key Setup Options", expanded=False):
+    with st.expander("ℹ️ API Key Setup Information", expanded=False):
         st.markdown("""
-        **Option 1: Environment File (Recommended)**
-        1. Copy `.env.example` to `.env` in your project folder
-        2. Edit `.env` and add: `GEMINI_API_KEY=your_actual_key_here`
-        3. Restart the application
+        **How This Works:**
+        - If the app has a default API key, you can use it immediately
+        - You can also add your own personal API key for better performance
+        - Personal keys are stored only in your browser session for privacy
         
-        **Option 2: Manual Entry**
-        - Enter your API key below
-        - Optionally save for future sessions
+        **Why add your own API key?**
+        - 🚀 **Better Performance**: Higher rate limits and faster responses
+        - 🔒 **Privacy**: Your data analysis stays private
+        - ⚡ **Reliability**: Dedicated access without sharing
+        - 🆓 **Free**: Google provides a generous free tier
         
-        **Get your API key:**
+        **How to get your free API key:**
         1. Visit [Google AI Studio](https://aistudio.google.com/app/apikey)
-        2. Sign in with your Google account
+        2. Sign in with your Google account  
         3. Click "Create API Key"
-        4. Copy the API key
+        4. Copy the key and add it below when prompted
         
-        **Security Note:** Environment files are more secure and persist across sessions.
+        **Security Note**: Your personal API key is stored only in your browser session and never shared.
         """)
 
-    # Configure API
+    # Configure API - this will show the current status and allow configuration
     api_configured = configure_gemini_api()
 
     if not api_configured:
         st.warning(
-            "⚠️ Please configure your Gemini API key above to generate insights.")
+            "⚠️ Please configure an API key above to generate AI insights.")
         st.info("💡 **Quick Setup:** Copy `.env.example` to `.env` and add your API key for automatic configuration!")
         return  # Use return instead of st.stop() to avoid potential issues
 
