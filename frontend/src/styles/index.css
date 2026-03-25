@@ -1,0 +1,8 @@
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    --color-primary: 99 102 241;
+    --color-primary-dark: 79 70 229;
+  }
+}
