@@ -1,6 +1,7 @@
 import { useState, useCallback } from 'react'
-import type { UploadResponse } from '../api/client'
 import type { AxiosProgressEvent } from 'axios'
+import { apiClient } from '../api/client'
+import type { UploadResponse } from '../api/client'
 
 interface UseFileUploadReturn {
   upload: (file: File) => Promise<UploadResponse>
@@ -9,6 +10,7 @@ interface UseFileUploadReturn {
   error: string | null
 }
 
+/** Hook for managing file upload state and progress */
 export function useFileUpload(): UseFileUploadReturn {
   const [progress, setProgress] = useState(0)
   const [isUploading, setIsUploading] = useState(false)
@@ -21,9 +23,7 @@ export function useFileUpload(): UseFileUploadReturn {
     try {
       const form = new FormData()
       form.append('file', file)
-      const { default: axios } = await import('axios')
-      const BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000'
-      const res = await axios.post<UploadResponse>(`${BASE_URL}/api/upload`, form, {
+      const res = await apiClient.post<UploadResponse>('/api/upload', form, {
         headers: { 'Content-Type': 'multipart/form-data' },
         onUploadProgress: (evt: AxiosProgressEvent) => {
           if (evt.total) {
