@@ -27,6 +27,9 @@ export function useAnalysis<T>(
     } finally {
       setIsLoading(false)
     }
+    // Intentionally omitting `fetcher` from deps: callers pass inline arrow
+    // functions, so including it would trigger infinite re-renders. Callers
+    // trigger re-fetches explicitly by calling `fetch()` via useEffect.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
