@@ -39,7 +39,7 @@ export default function DashboardPage() {
         })
       }).catch(() => {})
     }
-  }, [sessionId])
+  }, [sessionId, state.sessionId, dispatch])
 
   useEffect(() => {
     if (state.darkMode) {
