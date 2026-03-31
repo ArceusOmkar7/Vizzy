@@ -11,6 +11,7 @@ class UploadResponse(BaseModel):
     columns: int
     size_bytes: int
     memory_mb: float
+    null_count: int
     upload_time: datetime
 
 
@@ -21,5 +22,7 @@ class SessionInfo(BaseModel):
     rows: int
     columns: int
     size_bytes: int
+    memory_mb: float
+    null_count: int
     uploaded_at: datetime
     last_accessed: datetime

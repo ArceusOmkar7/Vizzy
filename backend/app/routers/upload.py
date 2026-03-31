@@ -30,6 +30,7 @@ async def upload_file(file: UploadFile = File(...)) -> UploadResponse:
     df = load_data_from_bytes(content, filename)
     session_id = create_session(df, filename, size_bytes)
     memory_mb = df.memory_usage(deep=True).sum() / (1024 * 1024)
+    null_count = int(df.isnull().sum().sum())
 
     return UploadResponse(
         session_id=session_id,
@@ -38,6 +39,7 @@ async def upload_file(file: UploadFile = File(...)) -> UploadResponse:
         columns=len(df.columns),
         size_bytes=size_bytes,
         memory_mb=round(memory_mb, 3),
+        null_count=null_count,
         upload_time=datetime.utcnow(),
     )
 
@@ -47,12 +49,16 @@ def get_session_info(session_id: str) -> SessionInfo:
     """Get basic information about an existing session."""
     session = get_session(session_id)
     df = session["df"]
+    memory_mb = df.memory_usage(deep=True).sum() / (1024 * 1024)
+    null_count = int(df.isnull().sum().sum())
     return SessionInfo(
         session_id=session_id,
         filename=session["filename"],
         rows=len(df),
         columns=len(df.columns),
         size_bytes=session["size_bytes"],
+        memory_mb=round(memory_mb, 3),
+        null_count=null_count,
         uploaded_at=session["uploaded_at"],
         last_accessed=session["last_accessed"],
     )

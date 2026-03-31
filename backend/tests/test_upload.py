@@ -16,6 +16,9 @@ def test_upload_csv(client: TestClient, csv_bytes: bytes):
     assert data["filename"] == "data.csv"
     assert data["rows"] > 0
     assert data["columns"] > 0
+    assert "memory_mb" in data
+    assert "null_count" in data
+    assert isinstance(data["null_count"], int)
 
 
 def test_upload_invalid_type(client: TestClient):
@@ -36,7 +39,11 @@ def test_get_session(client: TestClient, csv_bytes: bytes):
     session_id = upload_resp.json()["session_id"]
     resp = client.get(f"/api/session/{session_id}")
     assert resp.status_code == 200
-    assert resp.json()["session_id"] == session_id
+    data = resp.json()
+    assert data["session_id"] == session_id
+    assert "memory_mb" in data
+    assert "null_count" in data
+    assert isinstance(data["null_count"], int)
 
 
 def test_delete_session(client: TestClient, csv_bytes: bytes):
