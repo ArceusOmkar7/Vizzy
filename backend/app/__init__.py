@@ -1,0 +1,1 @@
+"""Vizzy FastAPI backend application."""
